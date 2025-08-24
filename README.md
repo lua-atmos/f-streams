@@ -1,5 +1,9 @@
 # f-streams
 
+[
+    [`v0.1`](https://github.com/lua-atmos/f-streams/tree/v0.1)
+]
+
 `f-streams` is yet another streams library for Lua.
 
 A stream is simply a function or any value with a `__call` metamethod.
@@ -69,7 +73,21 @@ terminates.
     - to_n
 -->
 
-## Examples
+# Install & Run
+
+```
+sudo luarocks install f-streams --lua-version=5.4
+lua5.4 <example.lua>
+```
+
+You may also copy the file `streams/init.lua` as `streams.lua` into your Lua
+path, e.g.:
+
+```
+cp streams/init.lua /usr/local/share/lua/5.4/streams.lua
+```
+
+# Examples
 
 Counts from `1` to infinity, takes the first 3 values, converts to table, and
 print all indexes and values:
