@@ -46,12 +46,12 @@ terminates.
 
 - Sinks
     - `to_table(s)`:    appends to a table all values of `s`
-    - `to_sum(s)`:      sum of all values of `s`
-    - `to_mul(s)`:      multiplication of all values of `s`
-    - `to_min(s)`:      minimum value of `s`
-    - `to_max(s)`:      maximum value of `s`
-    - `to_acc(s, f)`:   accumulates all values of `s` based on `f(acc,v)`
     - `to_each(s, f)`:  applies `f` to each value of `s`
+    - `to_acc(s, f)`:   accumulates all values of `s` based on `f(acc,v)`
+        - `to_sum(s)`:      sum all values of `s`
+        - `to_mul(s)`:      multiply all values of `s`
+        - `to_min(s)`:      minimum value of `s`
+        - `to_max(s)`:      maximum value of `s`
 
 <!--
     - only if as it goes...
@@ -64,11 +64,11 @@ Counts from `1` to infinity, takes the first 3 values, converts to table, and
 print all indexes and values:
 
 ```
-local cnt = S.fr_counter()      -- 1, 2, 3, 4, 5, ...
-local vs3 = S.take(cnt, 3)      -- 1, 2, 3
-local vec = S.to_table(vs3)     -- {1, 2, 3}
+local cnt = S.fr_counter()  -- 1, 2, 3, 4, 5, ...
+local vs3 = S.take(cnt, 3)  -- 1, 2, 3
+local vec = S.to_table(vs3) -- {1, 2, 3}
 for i,v in ipairs(vec) do
-    print(i,v)                  -- 1,1 / 2,2 / 3,3
+    print(i,v)              -- 1,1 / 2,2 / 3,3
 end
 ```
 
@@ -78,7 +78,7 @@ From a table with names, prints all that start with `J`:
 local ns = S.fr_table { "Joao", "Jose", "Maria" }
 local js = S.filter(ns, function(n) return n:find("^J") end)
 for n in js do
-    print(n)        -- Joao / Jose
+    print(n)    -- Joao / Jose
 end
 ```
 
