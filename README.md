@@ -1,19 +1,19 @@
 # f-streams
 
-`f-streams` is yet another stream library for Lua.
+`f-streams` is yet another streams library for Lua.
 
 A stream is simply a function or any value with a `__call` metamethod.
 
 A stream produces a new value each time is called.
-A `nil` as return indicates the stream end.
-Then, the stream must always return `nil` when called.
+When a stream returns `nil`, it indicates its termination.
+Them, all subsequent calls to the stream must also return `nil`.
 
 Streams can be combined with other streams or values to create new streams.
 
-The API is divided into three groups: sources, combinators and sinks:
+The API is divided into three groups: sources, combinators and sinks.
 
 A source has the prefix `fr_` and creates a stream from the given values.
-A combinators combines streams and values to create new streams.
+A combinator combines streams and values to create new streams.
 A sink has the prefix `to_` and consumes a stream, producing results, until it
 terminates.
 
