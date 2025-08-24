@@ -6,16 +6,23 @@ A stream is simply a function or any value with a `__call` metamethod.
 
 A stream produces a new value each time is called.
 When a stream returns `nil`, it indicates its termination.
-Them, all subsequent calls to the stream must also return `nil`.
+Then, all subsequent calls to the stream must also return `nil`.
 
 Streams can be combined with other streams or values to create new streams.
 
-The API is divided into three groups: sources, combinators and sinks.
+`TODO: finalization`
+
+Streams are compatible with the generic [for](lua-for) loop of Lua, including
+proper finalization when the loop ends.
+
+The API is divided into three groups: *sources*, *combinators* and *sinks*.
 
 A source has the prefix `fr_` and creates a stream from the given values.
 A combinator combines streams and values to create new streams.
 A sink has the prefix `to_` and consumes a stream, producing results, until it
 terminates.
+
+[lua-for]: https://www.lua.org/manual/5.4/manual.html#3.3.5
 
 - Sources
     - `fr_const(v)`:    stream of constants `v`
@@ -36,8 +43,9 @@ terminates.
     - `flatten(ss)`:    flattens a stream of streams into a single stream
 
 <!--
-- `zip(s1, s2)`: combines two streams `s1` and `s2` into a single stream
-- `concat(s1, s2)`: concatenates two streams `s1` and `s2` into a single stream
+- merge
+- `zip(...)`: combines two streams `s1` and `s2` into a single stream
+- `concat(...)`: concatenates two streams `s1` and `s2` into a single stream
 - `cycle(s)`: repeats the stream `s` infinitely
 - `drop_while(s, f)`: drops values from the stream `s` while the function `f` is true
 - `take_while(s, f)`: takes values from the stream `s` while the function `f` is true
@@ -56,6 +64,9 @@ terminates.
 <!--
     - only if as it goes...
     - `to_sorted(s)`: collects the values of the stream `s` into a sorted table
+    - to_last
+    - to_first
+    - to_n
 -->
 
 ## Examples
