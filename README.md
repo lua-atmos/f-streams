@@ -6,7 +6,7 @@
 
 `f-streams` is yet another streams library for Lua.
 
-A stream is simply a function or any value with a `__call` metamethod.
+A stream is simply a function or any other value with a `__call` metamethod.
 
 A stream produces a new value each time is called.
 When a stream returns `nil`, it indicates its termination.
@@ -16,7 +16,7 @@ Streams can be combined with other streams or values to create new streams.
 
 `TODO: finalization`
 
-Streams are compatible with the generic [for](lua-for) loop of Lua, including
+Streams are compatible with the generic [for][lua-for] loop of Lua, including
 proper finalization when the loop ends.
 
 The API is divided into three groups: *sources*, *combinators* and *sinks*.

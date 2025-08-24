@@ -11,7 +11,7 @@ description = {
    detailed = [[
     `f-streams` is yet another streams library for Lua.
 
-    A stream is simply a function or any value with a `__call` metamethod.
+    A stream is simply a function or any other value with a `__call` metamethod.
 
     A stream produces a new value each time is called.
     When a stream returns `nil`, it indicates its termination.
@@ -21,7 +21,7 @@ description = {
 
     `TODO: finalization`
 
-    Streams are compatible with the generic [for](lua-for) loop of Lua, including
+    Streams are compatible with the generic `for` loop of Lua, including
     proper finalization when the loop ends.
    ]],
    homepage = "https://github.com/lua-atmos/f-streams",
