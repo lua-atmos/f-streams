@@ -41,3 +41,14 @@ s = M.map(s, function(x) return M.fr_range(x, x + 1) end)
 s = M.flatten(s)
 local values = M.to_table(s)
 assert(#values == 6 and values[1] == 1 and values[2] == 2 and values[3] == 2 and values[4] == 3 and values[5] == 3 and values[6] == 4)
+
+local s = setmetatable({}, {
+    __call = function()
+        return 5
+    end
+})
+s = M.take(M.map(s, function(x) return x * 2 end), 2)
+assert(s() == 10)
+assert(s() == 10)
+assert(s() == nil)
+assert(s() == nil)

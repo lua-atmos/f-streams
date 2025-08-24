@@ -13,6 +13,20 @@ assert(#values == 5 and values[1] == 1 and values[5] == 5)
 s = M.fr_vector({1, 2, 3, 4, 5})
 values = M.to_table(s)
 assert(#values == 5 and values[1] == 1 and values[5] == 5)
+assert(s() == nil)
+assert(s() == nil)
+
+local value = {}
+setmetatable(value, {
+    __call = function()
+        return 5
+    end
+})
+local s = value
+local result = s()
+assert(result == 5)
+local result = s()
+assert(result == 5)
 
 -- COMBINATORS
 
@@ -20,6 +34,7 @@ s = M.fr_range(1, 5)
 s = M.map(s, function(x) return x * 2 end)
 values = M.to_table(s)
 assert(#values == 5 and values[1] == 2 and values[5] == 10)
+assert(s() == nil)
 
 s = M.fr_range(1, 5)
 s = M.filter(s, function(x) return x % 2 == 0 end)
@@ -35,6 +50,7 @@ s = M.fr_range(1, 10)
 s = M.skip(s, 5)
 values = M.to_table(s)
 assert(#values == 5 and values[1] == 6 and values[5] == 10)
+assert(s() == nil)
 
 s = M.fr_range(1, 5)
 s = M.distinct(s)
@@ -46,6 +62,7 @@ assert(#values == 5 and values[1] == 1 and values[5] == 5)
 s = M.fr_range(1, 5)
 local sum = M.to_sum(s)
 assert(sum == 15)
+assert(s() == nil)
 
 s = M.fr_range(1, 5)
 local product = M.to_product(s)
@@ -54,6 +71,7 @@ assert(product == 120)
 s = M.fr_range(1, 5)
 local min = M.to_min(s)
 assert(min == 1)
+assert(s() == nil)
 
 s = M.fr_range(1, 5)
 local max = M.to_max(s)
@@ -70,3 +88,4 @@ assert(reduced == 15)
 
 s = M.fr_range(1, 5)
 M.to_each(s, function(x) assert(x >= 1 and x <= 5) end)
+assert(s() == nil)

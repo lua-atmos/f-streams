@@ -24,6 +24,10 @@ function M.fr_table (t)
     end
 end
 
+function M.fr_vector (v)
+    return M.fr_table(v)
+end
+
 -- COMBINATORS
 
 function M.map (s, f)
