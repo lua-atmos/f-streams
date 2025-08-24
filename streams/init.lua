@@ -119,58 +119,6 @@ function M.to_vector (s)
     return M.to_table(s)
 end
 
-function M.to_sum (s)
-    local sum = 0
-    local v
-    repeat
-        v = s()
-        if v ~= nil then
-            sum = sum + v
-        end
-    until v == nil
-    return sum
-end
-
-function M.to_mul (s)
-    local mul = 1
-    local v
-    repeat
-        v = s()
-        if v ~= nil then
-            mul = mul * v
-        end
-    until v == nil
-    return mul
-end
-
-function M.to_min (s)
-    local min
-    local v
-    repeat
-        v = s()
-        if v ~= nil then
-            if min == nil or v < min then
-                min = v
-            end
-        end
-    until v == nil
-    return min
-end
-
-function M.to_max (s)
-    local max
-    local v
-    repeat
-        v = s()
-        if v ~= nil then
-            if max == nil or v > max then
-                max = v
-            end
-        end
-    until v == nil
-    return max
-end
-
 function M.to_acc (s, f)
     local acc
     local v
@@ -185,6 +133,21 @@ function M.to_acc (s, f)
         end
     until v == nil
     return acc
+end
+
+do  -- all based on `to_acc`
+    function M.to_sum(s)
+        return M.to_acc(s, function(a, b) return a + b end, 0)
+    end
+    function M.to_mul(s)
+        return M.to_acc(s, function(a, b) return a * b end, 1)
+    end
+    function M.to_min(s)
+        return M.to_acc(s, function(a, b) return math.min(a, b) end, math.huge)
+    end
+    function M.to_max(s)
+        return M.to_acc(s, function(a, b) return math.max(a, b) end, -math.huge)
+    end
 end
 
 function M.to_each (s, f)
