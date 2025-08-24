@@ -22,71 +22,63 @@ do
     assertx(out(), "1\n2\n3\n4\n5\n")
 end
 
+do
+    print("Testing...", "filter 1")
+    local names = {
+      "Arya",
+      "Beatrice",
+      "Caleb",
+      "Dennis"
+    }
+    local names_with_b = S.filter(S.fr_table(names), function(it) return it:find("[Bb]") end)
+    local v = S.to_table(names_with_b)
+    assert(#v == 2)
+    assert(v[1] == "Beatrice")
+    assert(v[2] == "Caleb")
+end
+
+do
+    print("Testing...", "map 1")
+    local names = {
+      "Arya",
+      "Beatrice",
+      "Caleb",
+      "Dennis"
+    }
+    local names_with_b = S.filter(S.fr_table(names), function(it) return it:find("[Bb]") end)
+    local v = S.to_table(S.map(names_with_b, string.upper))
+    assert(#v == 2)
+    assert(v[1] == "BEATRICE")
+    assert(v[2] == "CALEB")
+end
+
+do
+    print("Testing...", "each 1")
+    local r = S.fr_range(1, 10) -- all the numbers from 1 to 10 (inclusive)
+    local e = S.filter(r, function(it) return it%2==0 end) -- take only even numbers
+    local t = {}
+    S.to_each(e, function (it) t[#t+1]=it end)
+    assert(#t==5 and t[1]==2 and t[5]==10)
+end
+
+do
+    print("Testing...", "map 2")
+    local names = {"hellen", "oDYSseuS", "aChIlLeS", "PATROCLUS"}
+    local fix_case = function (name)
+        return name:sub(1,1):upper() .. name:sub(2):lower()
+    end
+    local t = S.to_table(S.map(S.fr_table(names), fix_case))
+    assert(#t==4 and t[1]=="Hellen" and t[4]=="Patroclus")
+end
+
 do return end
 
-local src = [[
-    val f = require "atmos.lang.functional"
-    val names = @{
-      "Arya",
-      "Beatrice",
-      "Caleb",
-      "Dennis"
-    }
-    val names_with_b = f.filter(names, \{it::find("[Bb]")})::to_array()
-    xprint(names_with_b)
-]]
-print("Testing...", "func 3")
-local out = atm_test(src)
-assertx(out, "{Beatrice, Caleb}\n")
-
-local src = [[
-    val f = require "atmos.lang.functional"
-    val names = @{
-      "Arya",
-      "Beatrice",
-      "Caleb",
-      "Dennis"
-    }
-    val names_with_b = f.filter(names, \{it::find("[Bb]")})::
-        map(string.upper)::
-        to_array()
-    xprint(names_with_b)
-]]
-print("Testing...", "func 4")
-local out = atm_test(src)
-assertx(out, "{BEATRICE, CALEB}\n")
-
-local src = [[
-    val f = require "atmos.lang.functional"
-    f.range(1, 10)::    ;; run through all the numbers from 1 to 10 (inclusive)
-      filter(\{(it%2)==0})::  ;; take only even numbers
-      foreach(print)   ;; run print for every value individually
-]]
-print("Testing...", "func 5")
-local out = atm_test(src)
-assertx(out, "2\n4\n6\n8\n10\n")
-
-local src = [[
-    val f = require "atmos.lang.functional"
-    val names = @{"hellen", "oDYSseuS", "aChIlLeS", "PATROCLUS"}
-    val fix_case = func (name) {
-      name::sub(1,1)::upper() ++ name::sub(2)::lower()
-    }
-    loop name in f.map(names, fix_case) {
-      print(name)
-    }
-]]
-print("Testing...", "func 6")
-local out = atm_test(src)
-assertx(out, "Hellen\nOdysseus\nAchilles\nPatroclus\n")
-
-local src = [[
-    val f = require "atmos.lang.functional"
-    val numbers = f.range(10,15)
-    val sum = numbers::reduce(\(acc,new){acc+new}, 0)
+do
+    print("Testing...", "acc 1")
+    local numbers = S.fr_range(10,15)
+    local sum = numbers::reduce(\(acc,new){acc+new}, 0)
     print(sum)
-]]
-print("Testing...", "func 7")
+end
 local out = atm_test(src)
 assertx(out, "75\n")
 
