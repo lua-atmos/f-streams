@@ -56,4 +56,35 @@ terminates.
 <!--
     - only if as it goes...
     - `to_sorted(s)`: collects the values of the stream `s` into a sorted table
---
+-->
+
+## Examples
+
+Counts from `1` to infinity, takes the first 3 values, converts to table, and
+print all indexes and values:
+
+```
+local cnt = S.fr_counter()      -- 1, 2, 3, 4, 5, ...
+local vs3 = S.take(cnt, 3)      -- 1, 2, 3
+local vec = S.to_table(vs3)     -- {1, 2, 3}
+for i,v in ipairs(vec) do
+    print(i,v)                  -- 1,1 / 2,2 / 3,3
+end
+```
+
+From a table with names, prints all that start with `J`:
+
+```
+local ns = S.fr_table { "Joao", "Jose", "Maria" }
+local js = S.filter(ns, function(n) return n:find("^J") end)
+for n in js do
+    print(n)        -- Joao / Jose
+end
+```
+
+Print each value from `1` to `10`:
+
+```
+local vs = S.fr_range(1, 10)
+S.to_each(vs, print)
+```
