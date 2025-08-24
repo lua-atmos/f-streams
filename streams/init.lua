@@ -2,6 +2,14 @@ local M = {}
 
 -- SOURCES
 
+function M.fr_counter (i)
+    return function()
+        local v = i
+        i = i + 1
+        return v
+    end
+end
+
 function M.fr_range (a, b)
     local i = a
     return function()
