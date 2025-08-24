@@ -1,5 +1,11 @@
 local S = require("streams")
 
+local s = S.fr_const(42)
+local mapped = S.map(s, function(x) return x * 2 end)
+assert(mapped() == 84)
+assert(mapped() == 84)
+assert(mapped() == 84)
+
 local s = S.fr_range(1, 10)
 s = S.filter(s, function(x) return x % 2 == 0 end)
 s = S.map(s, function(x) return x * 2 end)

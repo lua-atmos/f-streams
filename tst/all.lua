@@ -1,3 +1,6 @@
+print "=== INDI ==="
 dofile "indi.lua"
+print "=== MULTI ==="
 dofile "multi.lua"
+print "=== EXS ==="
 dofile "exs.lua"

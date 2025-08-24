@@ -2,6 +2,11 @@ local S = require("streams")
 
 -- SOURCES
 
+local s = S.fr_const(42)
+assert(s() == 42)
+assert(s() == 42)
+assert(s() == 42)
+
 local s = S.fr_range(1, 5)
 local values = S.to_table(s)
 assert(#values == 5 and values[1] == 1 and values[5] == 5)
@@ -9,12 +14,6 @@ assert(#values == 5 and values[1] == 1 and values[5] == 5)
 s = S.fr_table({1, 2, 3, 4, 5})
 values = S.to_table(s)
 assert(#values == 5 and values[1] == 1 and values[5] == 5)
-
-s = S.fr_vector({1, 2, 3, 4, 5})
-values = S.to_table(s)
-assert(#values == 5 and values[1] == 1 and values[5] == 5)
-assert(s() == nil)
-assert(s() == nil)
 
 local value = {}
 setmetatable(value, {
@@ -65,8 +64,8 @@ assert(sum == 15)
 assert(s() == nil)
 
 s = S.fr_range(1, 5)
-local product = S.to_product(s)
-assert(product == 120)
+local mul = S.to_mul(s)
+assert(mul == 120)
 
 s = S.fr_range(1, 5)
 local min = S.to_min(s)
@@ -78,12 +77,7 @@ local max = S.to_max(s)
 assert(max == 5)
 
 s = S.fr_range(1, 5)
-local sorted = S.to_sorted(s)
-values = S.to_table(sorted)
-assert(#values == 5 and values[1] == 1 and values[5] == 5)
-
-s = S.fr_range(1, 5)
-local reduced = S.to_reduced(s, function(a, b) return a + b end)
+local reduced = S.to_acc(s, function(a, b) return a + b end)
 assert(reduced == 15)
 
 s = S.fr_range(1, 5)

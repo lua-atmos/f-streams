@@ -2,6 +2,12 @@ local M = {}
 
 -- SOURCES
 
+function M.fr_const (v)
+    return function ()
+        return v
+    end
+end
+
 function M.fr_counter (i)
     return M.fr_range(i)
 end
@@ -27,10 +33,6 @@ function M.fr_table (t)
             return v
         end
     end
-end
-
-function M.fr_vector (v)
-    return M.fr_table(v)
 end
 
 -- COMBINATORS
@@ -85,15 +87,15 @@ function M.distinct (s)
     end
 end
 
-function M.flatten (s)
-    local current_stream = s()
+function M.flatten (ss)
+    local current_stream = ss()
     return function()
         while current_stream do
             local v = current_stream()
             if v ~= nil then
                 return v
             else
-                current_stream = s()
+                current_stream = ss()
             end
         end
     end
@@ -129,16 +131,16 @@ function M.to_sum (s)
     return sum
 end
 
-function M.to_product (s)
-    local product = 1
+function M.to_mul (s)
+    local mul = 1
     local v
     repeat
         v = s()
         if v ~= nil then
-            product = product * v
+            mul = mul * v
         end
     until v == nil
-    return product
+    return mul
 end
 
 function M.to_min (s)
@@ -169,13 +171,7 @@ function M.to_max (s)
     return max
 end
 
-function M.to_sorted (s)
-    local t = M.to_table(s)
-    table.sort(t)
-    return M.fr_table(t)
-end
-
-function M.to_reduced (s, f)
+function M.to_acc (s, f)
     local acc
     local v
     repeat
