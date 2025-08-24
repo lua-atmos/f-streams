@@ -3,21 +3,18 @@ local M = {}
 -- SOURCES
 
 function M.fr_counter (i)
-    return function()
-        local v = i
-        i = i + 1
-        return v
-    end
+    return M.fr_range(i)
 end
 
 function M.fr_range (a, b)
-    local i = a
+    a = a or 1
     return function()
-        if i <= b then
-            local v = i
-            i = i + 1
-            return v
+        if b and a>b then
+            return nil
         end
+        local v = a
+        a = a + 1
+        return v
     end
 end
 

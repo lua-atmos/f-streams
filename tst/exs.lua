@@ -2,8 +2,8 @@ local S = require("streams")
 require "test"
 
 do
-    print("Testing...", "ex 1")
-    local my_counter = S.fr_counter(1)
+    print("Testing...", "counter 1")
+    local my_counter = S.fr_counter()
     local my_capped_counter = S.take(my_counter, 5)
     local my_array = S.to_table(my_capped_counter)
     out(type(my_array))
@@ -13,20 +13,16 @@ do
     assertx(out(), "table\n1\t1\n2\t2\n3\t3\n4\t4\n5\t5\n")
 end
 
-do return end
+do
+    print("Testing...", "counter 2")
+    local my_array = S.take(S.fr_counter(), 5)
+    for v in my_array do
+        out(v)
+    end
+    assertx(out(), "1\n2\n3\n4\n5\n")
+end
 
-local src = [[
-    val f = require "atmos.lang.functional"
-    val my_array =
-        f.counter()::
-            take(5)
-    loop v in my_array {
-      print(v)
-    }
-]]
-print("Testing...", "func 2")
-local out = atm_test(src)
-assertx(out, "1\n2\n3\n4\n5\n")
+do return end
 
 local src = [[
     val f = require "atmos.lang.functional"

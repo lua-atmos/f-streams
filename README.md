@@ -18,6 +18,7 @@ A sink has the prefix `to_` and consumes a stream, producing results, until it
 terminates.
 
 - Sources
+    - `fr_counter(a)`: generates a stream of numbers from `a` to infinity
     - `fr_range(a,b)`: generates a stream of numbers from `a` to `b`
     - `fr_table(t)`: generates a stream from a table `t`
     - `fr_vector(v)`: generates a stream from a vector `v`
