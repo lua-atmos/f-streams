@@ -71,42 +71,34 @@ do
     assert(#t==4 and t[1]=="Hellen" and t[4]=="Patroclus")
 end
 
-do return end
-
 do
     print("Testing...", "acc 1")
     local numbers = S.fr_range(10,15)
-    local sum = numbers::reduce(\(acc,new){acc+new}, 0)
-    print(sum)
+    local sum = S.to_acc(numbers, 0, function(acc,new) return acc+new end)
+    assert(sum == 75)
 end
-local out = atm_test(src)
-assertx(out, "75\n")
 
-local src = [[
-    val f = require "atmos.lang.functional"
-    val numbers = @{2, 1, 3, 4, 7, 11, 18, 29}
+do
+    print("Testing...", "filter 2")
+    local numbers = {2, 1, 3, 4, 7, 11, 18, 29}
 
-    val is_even = \{(it % 2) == 0}
-    xprint <-- f.filter(numbers, is_even)::to_array()
+    local is_even = function (it) return (it % 2) == 0 end
+    local vs1 = S.to_table(S.filter(S.fr_table(numbers), is_even))
 
-    xprint <-- f.filter(numbers, \{(it % 2) == 0})::to_array()
-]]
-print("Testing...", "func 8")
-local out = atm_test(src)
-assertx(out, "{2, 4, 18}\n{2, 4, 18}\n")
+    local vs2 = S.to_table(S.filter(S.fr_table(numbers), function (it) return (it % 2) == 0 end))
+    assert(#vs1==3 and #vs2==3 and vs1[1]==2 and vs2[2]==4 and vs1[3]==18)
+end
 
-local src = [[
-    val f = require "atmos.lang.functional"
-    val matrix = @{
-      @{1, 2, 3}, ;; first element of matrix
-      @{4, 5, 6}, ;; second element of matrix
-      @{7, 8, 9}  ;; third element of matrix
+do
+    print("Testing...", "matrix")
+    local matrix = {
+        {1, 2, 3},
+        {4, 5, 6},
+        {7, 8, 9},
     }
-    ;; map will iterate through each row, and the lambda
-    ;; indexes each to retrieve the first element
-    xprint <-- f.map(matrix, \{it[1]})::to_array()
-]]
-print("Testing...", "func 9")
-local out = atm_test(src)
-assertx(out, "{1, 4, 7}\n")
-
+    -- map will iterate through each row, and the lambda
+    -- indexes each to retrieve the first element
+    local v = S.map(S.fr_table(matrix), function(it) return it[1] end)
+    v = S.to_table(v)
+    assert(#v==3 and v[1]==1 and v[2]==4 and v[3]==7)
+end

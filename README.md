@@ -50,7 +50,7 @@ terminates.
     - `to_mul(s)`:      multiplication of all values of `s`
     - `to_min(s)`:      minimum value of `s`
     - `to_max(s)`:      maximum value of `s`
-    - `to_acc(s, f)`:   accumulates all values of `s` based on `f`
+    - `to_acc(s, f)`:   accumulates all values of `s` based on `f(acc,v)`
     - `to_each(s, f)`:  applies `f` to each value of `s`
 
 <!--

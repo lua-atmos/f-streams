@@ -119,8 +119,7 @@ function M.to_vector (s)
     return M.to_table(s)
 end
 
-function M.to_acc (s, f)
-    local acc
+function M.to_acc (s, acc, f)
     local v
     repeat
         v = s()
@@ -137,16 +136,16 @@ end
 
 do  -- all based on `to_acc`
     function M.to_sum(s)
-        return M.to_acc(s, function(a, b) return a + b end, 0)
+        return M.to_acc(s, 0, function(a, b) return a + b end)
     end
     function M.to_mul(s)
-        return M.to_acc(s, function(a, b) return a * b end, 1)
+        return M.to_acc(s, 1, function(a, b) return a * b end)
     end
     function M.to_min(s)
-        return M.to_acc(s, function(a, b) return math.min(a, b) end, math.huge)
+        return M.to_acc(s, math.huge, function(a, b) return math.min(a, b) end)
     end
     function M.to_max(s)
-        return M.to_acc(s, function(a, b) return math.max(a, b) end, -math.huge)
+        return M.to_acc(s, -math.huge, function(a, b) return math.max(a, b) end)
     end
 end
 

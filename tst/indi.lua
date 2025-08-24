@@ -77,7 +77,7 @@ local max = S.to_max(s)
 assert(max == 5)
 
 s = S.fr_range(1, 5)
-local reduced = S.to_acc(s, function(a, b) return a + b end)
+local reduced = S.to_acc(s, 0, function(a, b) return a + b end)
 assert(reduced == 15)
 
 s = S.fr_range(1, 5)
