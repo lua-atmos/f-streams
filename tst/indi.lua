@@ -1,0 +1,72 @@
+local M = require("streams")
+
+-- SOURCES
+
+local s = M.fr_range(1, 5)
+local values = M.to_table(s)
+assert(#values == 5 and values[1] == 1 and values[5] == 5)
+
+s = M.fr_table({1, 2, 3, 4, 5})
+values = M.to_table(s)
+assert(#values == 5 and values[1] == 1 and values[5] == 5)
+
+s = M.fr_vector({1, 2, 3, 4, 5})
+values = M.to_table(s)
+assert(#values == 5 and values[1] == 1 and values[5] == 5)
+
+-- COMBINATORS
+
+s = M.fr_range(1, 5)
+s = M.map(s, function(x) return x * 2 end)
+values = M.to_table(s)
+assert(#values == 5 and values[1] == 2 and values[5] == 10)
+
+s = M.fr_range(1, 5)
+s = M.filter(s, function(x) return x % 2 == 0 end)
+values = M.to_table(s)
+assert(#values == 2 and values[1] == 2 and values[2] == 4)
+
+s = M.fr_range(1, 10)
+s = M.take(s, 5)
+values = M.to_table(s)
+assert(#values == 5 and values[1] == 1 and values[5] == 5)
+
+s = M.fr_range(1, 10)
+s = M.skip(s, 5)
+values = M.to_table(s)
+assert(#values == 5 and values[1] == 6 and values[5] == 10)
+
+s = M.fr_range(1, 5)
+s = M.distinct(s)
+values = M.to_table(s)
+assert(#values == 5 and values[1] == 1 and values[5] == 5)
+
+-- SINKS
+
+s = M.fr_range(1, 5)
+local sum = M.to_sum(s)
+assert(sum == 15)
+
+s = M.fr_range(1, 5)
+local product = M.to_product(s)
+assert(product == 120)
+
+s = M.fr_range(1, 5)
+local min = M.to_min(s)
+assert(min == 1)
+
+s = M.fr_range(1, 5)
+local max = M.to_max(s)
+assert(max == 5)
+
+s = M.fr_range(1, 5)
+local sorted = M.to_sorted(s)
+values = M.to_table(sorted)
+assert(#values == 5 and values[1] == 1 and values[5] == 5)
+
+s = M.fr_range(1, 5)
+local reduced = M.to_reduced(s, function(a, b) return a + b end)
+assert(reduced == 15)
+
+s = M.fr_range(1, 5)
+M.to_each(s, function(x) assert(x >= 1 and x <= 5) end)

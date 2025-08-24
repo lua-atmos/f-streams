@@ -1,0 +1,43 @@
+local M = require("streams")
+
+local s = M.fr_range(1, 10)
+s = M.filter(s, function(x) return x % 2 == 0 end)
+s = M.map(s, function(x) return x * 2 end)
+local values = M.to_table(s)
+assert(#values == 5 and values[1] == 4 and values[5] == 20)
+
+s = M.fr_range(1, 10)
+s = M.take(s, 5)
+s = M.map(s, function(x) return x * 2 end)
+values = M.to_table(s)
+assert(#values == 5 and values[1] == 2 and values[5] == 10)
+
+s = M.fr_range(1, 10)
+s = M.skip(s, 5)
+s = M.filter(s, function(x) return x % 2 == 0 end)
+values = M.to_table(s)
+assert(#values == 3 and values[1] == 6 and values[3] == 10)
+
+s = M.fr_range(1, 10)
+s = M.map(s, function(x) return x * 2 end)
+s = M.take(s, 5)
+values = M.to_table(s)
+assert(#values == 5 and values[1] == 2 and values[5] == 10)
+
+s = M.fr_range(1, 10)
+s = M.distinct(s)
+s = M.map(s, function(x) return x * 2 end)
+values = M.to_table(s)
+assert(#values == 10 and values[1] == 2 and values[10] == 20)
+
+s = M.fr_range(1, 10)
+s = M.map(s, function(x) return x * 2 end)
+s = M.filter(s, function(x) return x % 4 == 0 end)
+values = M.to_table(s)
+assert(#values == 5 and values[1] == 4 and values[5] == 20)
+
+local s = M.fr_range(1, 3)
+s = M.map(s, function(x) return M.fr_range(x, x + 1) end)
+s = M.flatten(s)
+local values = M.to_table(s)
+assert(#values == 6 and values[1] == 1 and values[2] == 2 and values[3] == 2 and values[4] == 3 and values[5] == 3 and values[6] == 4)
