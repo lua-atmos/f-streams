@@ -35,6 +35,16 @@ function M.fr_table (t)
     end
 end
 
+function M.fr_coroutine (co)
+    return function()
+        return (function (_, ...)
+            if select('#',...) >= 0 then
+                return ...
+            end
+        end)(coroutine.resume(co))
+    end
+end
+
 -- COMBINATORS
 
 function M.map (s, f)

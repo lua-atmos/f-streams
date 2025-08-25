@@ -1,20 +1,24 @@
 local S = require("streams")
 
--- SOURCES
+print "--- SOURCES ---"
 
+print("Testing...", "const 1")
 local s = S.fr_const(42)
 assert(s() == 42)
 assert(s() == 42)
 assert(s() == 42)
 
+print("Testing...", "range 1")
 local s = S.fr_range(1, 5)
 local values = S.to_table(s)
 assert(#values == 5 and values[1] == 1 and values[5] == 5)
 
+print("Testing...", "table 1")
 s = S.fr_table({1, 2, 3, 4, 5})
 values = S.to_table(s)
 assert(#values == 5 and values[1] == 1 and values[5] == 5)
 
+print("Testing...", "__call 1")
 local value = {}
 setmetatable(value, {
     __call = function()
@@ -27,7 +31,17 @@ assert(result == 5)
 local result = s()
 assert(result == 5)
 
--- COMBINATORS
+print("Testing...", "coro 1")
+local co = coroutine.create(function ()
+    coroutine.yield(1)
+    coroutine.yield(2)
+    coroutine.yield(3)
+end)
+s = S.fr_coroutine(co)
+vs = S.to_table(s)
+assert(#vs==3 and vs[1]==1 and vs[2]==2 and vs[3]==3)
+
+print "--- COMBINATORS ---"
 
 s = S.fr_range(1, 5)
 s = S.map(s, function(x) return x * 2 end)
@@ -55,6 +69,34 @@ s = S.fr_range(1, 5)
 s = S.distinct(s)
 values = S.to_table(s)
 assert(#values == 5 and values[1] == 1 and values[5] == 5)
+
+print("Testing...", "coro 1")
+local co1 = coroutine.create(function ()
+    coroutine.yield(1)
+    coroutine.yield(2)
+    coroutine.yield(3)
+end)
+local coA = coroutine.create(function ()
+    coroutine.yield('A')
+    coroutine.yield('B')
+    coroutine.yield('C')
+end)
+local s1 = S.fr_coroutine(co1)
+local sA = S.fr_coroutine(coA)
+
+S.async
+
+resume(co1)
+
+local a1 = S.async(s1)
+local aA = S.async(sA)
+
+S.select(a1,aA)
+
+
+local s = S.merge(s1,sA)
+vs = S.to_table(s)
+assert(#vs==3 and vs[1]==1 and vs[2]==2 and vs[3]==3)
 
 -- SINKS
 
