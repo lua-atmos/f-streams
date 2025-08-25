@@ -41,8 +41,8 @@ terminates.
 - Combinators
     - `map(s,f)`:       applies `f` to each value of `s`
     - `filter(s,f)`:    filters `s` based on `f`
-    - `take(s, n)`:     takes the first `n` values of `s`
-    - `skip(s, n)`:     skips the first `n` values of `s`
+    - `take(s,n)`:      takes the first `n` values of `s`
+    - `skip(s,n)`:      skips the first `n` values of `s`
     - `distinct(s)`:    removes duplicate values of `s`
     - `flatten(ss)`:    flattens a stream of streams into a single stream
 
@@ -58,12 +58,12 @@ terminates.
 
 - Sinks
     - `to_table(s)`:    appends to a table all values of `s`
-    - `to_each(s, f)`:  applies `f` to each value of `s`
-    - `to_acc(s, f)`:   accumulates all values of `s` based on `f(acc,v)`
-        - `to_sum(s)`:      sum all values of `s`
-        - `to_mul(s)`:      multiply all values of `s`
-        - `to_min(s)`:      minimum value of `s`
-        - `to_max(s)`:      maximum value of `s`
+    - `to_each(s,f)`:   applies `f` to each value of `s`
+    - `to_acc(s,f)`:    accumulates all values of `s` based on `f(acc,v)`
+        - `to_sum(s)`:  sum all values of `s`
+        - `to_mul(s)`:  multiply all values of `s`
+        - `to_min(s)`:  minimum value of `s`
+        - `to_max(s)`:  maximum value of `s`
 
 <!--
     - only if as it goes...
