@@ -4,20 +4,14 @@
     [`v0.1`](https://github.com/lua-atmos/f-streams/tree/v0.1)
 ]
 
-`f-streams` is yet another streams library for Lua.
+`f-streams` is yet another streams library for Lua:
 
-A stream is simply a function or any other value with a `__call` metamethod.
-
-A stream produces a new value each time is called.
-When a stream returns `nil`, it indicates its termination.
-Then, all subsequent calls to the stream must also return `nil`.
-
-Streams can be combined with other streams or values to create new streams.
-
-`TODO: finalization`
-
-Streams are compatible with the generic [for][lua-for] loop of Lua, including
-proper finalization when the loop ends.
+- A stream is simply a function or any other value with a `__call` metamethod.
+- A stream produces a new value each time is called.
+  When a stream returns `nil`, it indicates its termination.
+  Then, all subsequent calls to the stream must also return `nil`.
+- A stream can be combined with other streams or values to create new streams.
+- A stream can be iterated over using Lua's generic [for][lua-for] loop.
 
 The API is divided into three groups: *sources*, *combinators* and *sinks*.
 
