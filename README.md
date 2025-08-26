@@ -66,12 +66,19 @@ terminates.
         - `to_max(s)`:  maximum value of `s`
 
 <!--
-    - only if as it goes...
+    - only if sorts as it goes...
     - `to_sorted(s)`: collects the values of the stream `s` into a sorted table
     - to_last
     - to_first
     - to_n
 -->
+
+As a fundamental limitation, `f-streams` does not support a [merge][rx-merge]
+combinator to read from multiple streams concurrently.
+However, this limitation is addressed by [`lua-atmos`](lua-atmos), which
+extends `f-streams` with a merge combinator.
+
+[rx-merge]: https://rxmarbles.com/#merge
 
 # Install & Run
 
