@@ -23,7 +23,8 @@ _ = S.from(1)                                       -- 1, 2, 3, ...
     >> S.take ^ 3                                   -- 2, 6, 10
     >> S.to_each ^ (function (v)
         print(v)                                    -- 2 / 6 / 10
-    end)```
+    end)
+```
 
 The API is divided into three groups: *sources*, *combinators* and *sinks*.
 
