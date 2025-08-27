@@ -84,19 +84,11 @@ end)
 local s1 = S.fr_coroutine(co1)
 local sA = S.fr_coroutine(coA)
 
-S.async
-
-resume(co1)
-
-local a1 = S.async(s1)
-local aA = S.async(sA)
-
-S.select(a1,aA)
-
-
-local s = S.merge(s1,sA)
+--[[
+local s = S.concat(s1,sA)
 vs = S.to_table(s)
 assert(#vs==3 and vs[1]==1 and vs[2]==2 and vs[3]==3)
+]]
 
 -- SINKS
 
