@@ -58,3 +58,41 @@ assert(s() == 10)
 assert(s() == 10)
 assert(s() == nil)
 assert(s() == nil)
+
+print("Testing...", "test 10: concat map")
+local s1 = S.from({1, 2, 3})
+local s2 = S.from({4, 5, 6})
+local s_concat = S.concat(s1, s2)
+local s_mapped = S.map(function(x) return x * 2 end, s_concat)
+local t = S.to_table(s_mapped)
+assert(#t == 6)
+for i = 1, 6 do
+    assert(t[i] == i * 2)
+end
+
+print("Testing...", "test 11: map concat")
+local s1 = S.from({1, 2, 3})
+local s2 = S.from({4, 5, 6})
+local s1_mapped = S.map(function(x) return x * 2 end, s1)
+local s2_mapped = S.map(function(x) return x*2 + 1 end, s2)
+local s_concat = S.concat(s1_mapped, s2_mapped)
+local t = S.to_table(s_concat)
+assert(#t == 6)
+for i = 1, 3 do
+    assert(t[i] == i*2)
+end
+for i = 4, 6 do
+    assert(t[i] == i*2 + 1)
+end
+
+print("Testing...", "test 12: concat filter")
+local s1 = S.from({1, 2, 3, 4})
+local s2 = S.from({5, 6, 7, 8})
+local s_concat = S.concat(s1, s2)
+local s_filtered = S.filter(function(x) return x % 2 == 0 end, s_concat)
+local t = S.to_table(s_filtered)
+assert(#t == 4)
+assert(t[1] == 2)
+assert(t[2] == 4)
+assert(t[3] == 6)
+assert(t[4] == 8)

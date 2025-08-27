@@ -85,6 +85,20 @@ end
 
 -- COMBINATORS
 
+function M.concat(...)
+    local ss = {...}
+    assert(#ss >= 2)
+    local cur = table.remove(ss, 1)
+    return function()
+        local v = cur()
+        while v==nil and #ss>0 do
+            cur = table.remove(ss, 1)
+            v = cur()
+        end
+        return v
+    end
+end
+
 function M.map (f, s)
     return function()
         local v = s()

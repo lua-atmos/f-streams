@@ -70,6 +70,41 @@ s = S.distinct(s)
 values = S.to_table(s)
 assert(#values == 5 and values[1] == 1 and values[5] == 5)
 
+print "--- CONCAT ---"
+do
+    print("Testing...", "concat 1")
+    local s1 = S.from({1, 2, 3})
+    local s2 = S.from({4, 5, 6})
+    local s_concat = S.concat(s1, s2)
+    local t = S.to_table(s_concat)
+    assert(#t == 6)
+    for i=1, 6 do
+        assert(t[i] == i)
+    end
+
+    print("Testing...", "concat 2")
+    local s1 = S.from({1, 2, 3})
+    local s2 = S.from({4, 5, 6})
+    local s3 = S.from({7, 8, 9})
+    local s_concat = S.concat(s1, s2, s3)
+    local t = S.to_table(s_concat)
+    assert(#t == 9)
+    for i = 1, 9 do
+        assert(t[i] == i)
+    end
+
+    print("Testing...", "concat 3")
+    local s1 = S.from({})
+    local s2 = S.from({1, 2, 3})
+    local s_concat = S.concat(s1, s2)
+    local t = S.to_table(s_concat)
+    assert(#t == 3)
+    for i = 1, 3 do
+        assert(t[i] == i)
+    end
+end
+
+
 print("Testing...", "coro 1")
 local co1 = coroutine.create(function ()
     coroutine.yield(1)
