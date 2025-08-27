@@ -1,5 +1,5 @@
 package = "f-streams"
-version = "0.1-1"
+version = "0.1-2"
 source = {
    url = "git+https://github.com/lua-atmos/f-streams",
    branch = "v0.1",
@@ -12,9 +12,6 @@ description = {
    ]],
    homepage = "https://github.com/lua-atmos/f-streams",
    license = "MIT",
-}
-dependencies = {
-   "lua ~> 5.3",
 }
 build = {
    type = "builtin",

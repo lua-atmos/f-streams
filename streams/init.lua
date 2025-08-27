@@ -1,25 +1,13 @@
 local M = {}
 
-function M.language ()
-    debug.setmetatable(function()end, {
-        __pow = function (f, v)
-            return function (...)
-                return f(v, ...)
-            end
-        end,
-        __bor = function (s, f)
-            return f(M.from(s))
-        end,
-        __concat = function (s1, s2)
-            return M.concat(M.from(s1), M.from(s2))
-        end,
-        __mul = function (s, f)
-            return M.map(f, M.from(s))
-        end,
-        __div = function (s, f)
-            return M.filter(f, M.from(s))
-        end,
-    })
+function M.methods (on)
+    local F = function () end
+    if on then
+        assert(debug.getmetatable(F) == nil)
+        debug.setmetatable(F, { __index=M })
+    else
+        debug.setmetatable(F, nil)
+    end
 end
 
 -- SOURCES
