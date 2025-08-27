@@ -7,12 +7,12 @@
 `f-streams` is a pull-based streams library for Lua:
 
 - A stream is simply a function or any other value with a `__call` metamethod.
-- A stream can represents infinite lazy lists.
 - A stream produces a new value each time is called.
   When a stream returns `nil`, it indicates its termination.
   Then, all subsequent calls to the stream must also return `nil`.
 - A stream can be combined with other streams or values to create new streams.
 - A stream can be iterated over using Lua's generic [for][lua-for] loop.
+- A stream can represent infinite lazy lists.
 
 The example that follows prints the first three odd numbers multiplied by `2`:
 
@@ -44,16 +44,6 @@ terminates.
 <!--
     - `fr_value(v)`:    stream of a single value `v`
 -->
-
-S.language()
-
-S.fr_range(1,10)
-    >> S.filter ^ (function(it) return it%2==0 end)
-    >> S.to_each ^ (function (it) t[#t+1]=it end)
-
-S.to_each ^ (function (it) t[#t+1]=it end)
-    << S.filter ^ (function(it) return it%2==0 end)
-    << S.fr_range(1,10)
 
 - Combinators
     - `map(f,s)`:       applies `f` to each value of `s`
@@ -89,6 +79,11 @@ S.to_each ^ (function (it) t[#t+1]=it end)
     - to_first
     - to_n
 -->
+
+- Embedded operators language:
+    - `language()`: enables the operators `>>` and `^` to work with streams
+    - `s >> f`:     equivalent to `f(s)`
+    - `s >> f^v`:   equivalent to `f(v, s)`
 
 As a fundamental limitation, `f-streams` does not support a [merge][rx-merge]
 combinator to read from multiple streams concurrently.
