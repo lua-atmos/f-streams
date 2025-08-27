@@ -99,7 +99,7 @@ function M.concat(...)
     end
 end
 
-function M.map (f, s)
+function M.map (s, f)
     return function()
         local v = s()
         if v ~= nil then
@@ -108,7 +108,7 @@ function M.map (f, s)
     end
 end
 
-function M.filter (f, s)
+function M.filter (s, f)
     return function()
         local v
         repeat
@@ -118,7 +118,7 @@ function M.filter (f, s)
     end
 end
 
-function M.take (n, s)
+function M.take (s, n)
     local i = 0
     return function()
         if i < n then
@@ -128,7 +128,7 @@ function M.take (n, s)
     end
 end
 
-function M.skip (n, s)
+function M.skip (s, n)
     for _ = 1, n do
         s()
     end
@@ -181,7 +181,7 @@ function M.to_vector (s)
     return M.to_table(s)
 end
 
-function M.to_acc (f, acc, s)
+function M.to_acc (s, acc, f)
     local v
     repeat
         v = s()
@@ -198,20 +198,20 @@ end
 
 do  -- all based on `to_acc`
     function M.to_sum(s)
-        return M.to_acc(function(a, b) return a + b end, 0, s)
+        return M.to_acc(s, 0, function(a, b) return a + b end)
     end
     function M.to_mul(s)
-        return M.to_acc(function(a, b) return a * b end, 1, s)
+        return M.to_acc(s, 1, function(a, b) return a * b end)
     end
     function M.to_min(s)
-        return M.to_acc(function(a, b) return math.min(a, b) end, math.huge, s)
+        return M.to_acc(s, math.huge, function(a, b) return math.min(a, b) end)
     end
     function M.to_max(s)
-        return M.to_acc(function(a, b) return math.max(a, b) end, -math.huge, s)
+        return M.to_acc(s, -math.huge, function(a, b) return math.max(a, b) end)
     end
 end
 
-function M.to_each (f, s)
+function M.to_each (s, f)
     local v
     repeat
         v = s()

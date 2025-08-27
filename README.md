@@ -17,12 +17,12 @@
 The example that follows prints the first three odd numbers multiplied by `2`:
 
 ```
-_ = S.from(1)                                      -- 1, 2, 3, ...
-    | S.filter ^ (function(x) return x%2 == 1 end) -- 1, 3, 5, ...
-    | S.map ^ (function(x) return x * 2 end)       -- 2, 6, 10, ...
-    | S.take ^ 3                                   -- 2, 6, 10
-    | S.to_each ^ (function (v)
-        print(v)                                   -- 2 / 6 / 10
+S.from(1)                                       -- 1, 2, 3, ...
+    :filter(function(x) return x%2 == 1 end)    -- 1, 3, 5, ...
+    :map(function(x) return x * 2 end)          -- 2, 6, 10, ...
+    :take(3)                                    -- 2, 6, 10
+    :to_each(function (v)
+        print(v)                                -- 2 / 6 / 10
     end)
 ```
 
@@ -43,14 +43,14 @@ terminates.
     - `from(v)`:        calls the appropriate `fr_*` for `v`
 
 <!--
-    - `fr_value(v)`:    stream of a single value `v`
+    - `fr_single(v)`:    stream of a single value `v`
 -->
 
 - Combinators
-    - `map(f,s)`:       applies `f` to each value of `s`
-    - `filter(f,s)`:    filters `s` based on `f`
-    - `take(n,s)`:      takes the first `n` values of `s`
-    - `skip(n,s)`:      skips the first `n` values of `s`
+    - `map(s,f)`:       applies `f` to each value of `s`
+    - `filter(s,f)`:    filters `s` based on `f`
+    - `take(s,n)`:      takes the first `n` values of `s`
+    - `skip(s,n)`:      skips the first `n` values of `s`
     - `distinct(s)`:    removes duplicate values of `s`
     - `flatten(ss)`:    flattens a stream of streams into a single stream
 
@@ -67,8 +67,8 @@ mapi
 
 - Sinks
     - `to_table(s)`:        appends to a table all values of `s`
-    - `to_each(f,s)`:       applies `f` to each value of `s`
-    - `to_acc(f,acc,s)`:    accumulates all values `v` in `s` based on `acc=f(acc,v)`
+    - `to_each(s,f)`:       applies `f` to each value of `s`
+    - `to_acc(s,acc,f)`:    accumulates all values `v` in `s` based on `acc=f(acc,v)`
         - `to_sum(s)`:      sum all values of `s`
         - `to_mul(s)`:      multiply all values of `s`
         - `to_min(s)`:      minimum value of `s`
@@ -98,7 +98,7 @@ mapi
     -s
     s %
     s //
---
+-->
 
 As a fundamental limitation, `f-streams` does not support a [merge][rx-merge]
 combinator to read from multiple streams concurrently.

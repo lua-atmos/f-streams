@@ -43,24 +43,27 @@ assert(#vs==3 and vs[1]==1 and vs[2]==2 and vs[3]==3)
 
 print "--- COMBINATORS ---"
 
+print("Testing...", "map 1")
 s = S.fr_range(1, 5)
-s = S.map(function(x) return x * 2 end, s)
+s = S.map(s, function(x) return x * 2 end)
 values = S.to_table(s)
 assert(#values == 5 and values[1] == 2 and values[5] == 10)
 assert(s() == nil)
 
+print("Testing...", "filter 1")
 s = S.fr_range(1, 5)
-s = S.filter(function(x) return x % 2 == 0 end, s)
+s = S.filter(s, function(x) return x % 2 == 0 end)
 values = S.to_table(s)
 assert(#values == 2 and values[1] == 2 and values[2] == 4)
 
+print("Testing...", "take 1")
 s = S.fr_range(1, 10)
-s = S.take(5, s)
+s = S.take(s, 5)
 values = S.to_table(s)
 assert(#values == 5 and values[1] == 1 and values[5] == 5)
 
 s = S.fr_range(1, 10)
-s = S.skip(5, s)
+s = S.skip(s, 5)
 values = S.to_table(s)
 assert(#values == 5 and values[1] == 6 and values[5] == 10)
 assert(s() == nil)
@@ -146,9 +149,9 @@ local max = S.to_max(s)
 assert(max == 5)
 
 s = S.fr_range(1, 5)
-local reduced = S.to_acc(function(a, b) return a + b end, 0, s)
+local reduced = S.to_acc(s, 0, function(a, b) return a + b end)
 assert(reduced == 15)
 
 s = S.fr_range(1, 5)
-S.to_each(function(x) assert(x >= 1 and x <= 5) end, s)
+S.to_each(s, function(x) assert(x >= 1 and x <= 5) end)
 assert(s() == nil)
