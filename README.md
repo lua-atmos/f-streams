@@ -17,12 +17,12 @@
 The example that follows prints the first three odd numbers multiplied by `2`:
 
 ```
-_ = S.from(1)                                       -- 1, 2, 3, ...
-    >> S.filter ^ (function(x) return x%2 == 1 end) -- 1, 3, 5, ...
-    >> S.map ^ (function(x) return x * 2 end)       -- 2, 6, 10, ...
-    >> S.take ^ 3                                   -- 2, 6, 10
-    >> S.to_each ^ (function (v)
-        print(v)                                    -- 2 / 6 / 10
+_ = S.from(1)                                      -- 1, 2, 3, ...
+    | S.filter ^ (function(x) return x%2 == 1 end) -- 1, 3, 5, ...
+    | S.map ^ (function(x) return x * 2 end)       -- 2, 6, 10, ...
+    | S.take ^ 3                                   -- 2, 6, 10
+    | S.to_each ^ (function (v)
+        print(v)                                   -- 2 / 6 / 10
     end)
 ```
 
@@ -62,6 +62,7 @@ terminates.
 - `drop_while(s, f)`: drops values from the stream `s` while the function `f` is true
 - `take_while(s, f)`: takes values from the stream `s` while the function `f` is true
 - `partition(s, f)`: partitions the stream `s` into two or more streams based on the function `f`
+mapi
 -->
 
 - Sinks
@@ -81,15 +82,28 @@ terminates.
     - to_n
 -->
 
-- Embedded operators language:
-    - `language()`: enables the operators `>>` and `^` to work with streams
-    - `s >> f`:     equivalent to `f(s)`
-    - `s >> f^v`:   equivalent to `f(v, s)`
+- Language:
+    - `language()`: enables the following operators to work with streams
+    - `s`:          `from(s)`
+    - `s | f`:      `f(s)`
+    - `s | f^v`:    `f(v, s)`
+    - `s * f`:      `map(s,f)`
+    - `s / f`:      `filter(s,f)`
+    - `#s`:         `to_table(s)`
+    - `s[n]`:       `(#take(s,n))[n]`
+    - `s + n`:      `take(s,n)`
+    - `s - n`:      `drop(s,n)`
+
+<!--
+    -s
+    s %
+    s //
+--
 
 As a fundamental limitation, `f-streams` does not support a [merge][rx-merge]
 combinator to read from multiple streams concurrently.
 However, this limitation is addressed by [`lua-atmos`](lua-atmos), which
-extends `f-streams` with a merge combinator.
+extends `f-streams` with such combinator.
 
 [rx-merge]: https://rxmarbles.com/#merge
 

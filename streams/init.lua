@@ -7,8 +7,17 @@ function M.language ()
                 return f(v, ...)
             end
         end,
-        __shr = function (s, f)
-            return f(s)
+        __bor = function (s, f)
+            return f(M.from(s))
+        end,
+        __concat = function (s1, s2)
+            return M.concat(M.from(s1), M.from(s2))
+        end,
+        __mul = function (s, f)
+            return M.map(f, M.from(s))
+        end,
+        __div = function (s, f)
+            return M.filter(f, M.from(s))
         end,
     })
 end
@@ -16,7 +25,9 @@ end
 -- SOURCES
 
 function M.from (v, ...)
-    if ... ~= nil then
+    if type(v) == 'function' then
+        return v
+    elseif ... ~= nil then
         return M.fr_range(v, ...)
     elseif v==nil or type(v)=='number' then
         return M.fr_counter(v)
