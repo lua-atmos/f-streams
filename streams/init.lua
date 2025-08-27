@@ -73,14 +73,12 @@ end
 
 -- COMBINATORS
 
-function M.concat(...)
-    local ss = {...}
-    assert(#ss >= 2)
-    local cur = table.remove(ss, 1)
+function M.concat(s1, s2)
+    local cur = s1
     return function()
         local v = cur()
-        while v==nil and #ss>0 do
-            cur = table.remove(ss, 1)
+        if v == nil then
+            cur = s2
             v = cur()
         end
         return v

@@ -86,17 +86,6 @@ do
     end
 
     print("Testing...", "concat 2")
-    local s1 = S.from({1, 2, 3})
-    local s2 = S.from({4, 5, 6})
-    local s3 = S.from({7, 8, 9})
-    local s_concat = S.concat(s1, s2, s3)
-    local t = S.to_table(s_concat)
-    assert(#t == 9)
-    for i = 1, 9 do
-        assert(t[i] == i)
-    end
-
-    print("Testing...", "concat 3")
     local s1 = S.from({})
     local s2 = S.from({1, 2, 3})
     local s_concat = S.concat(s1, s2)
