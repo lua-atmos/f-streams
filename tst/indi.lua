@@ -81,8 +81,8 @@ local coA = coroutine.create(function ()
     coroutine.yield('B')
     coroutine.yield('C')
 end)
-local s1 = S.fr_coroutine(co1)
-local sA = S.fr_coroutine(coA)
+local s1 = S.from(co1)
+local sA = S.from(coA)
 
 --[[
 local s = S.concat(s1,sA)

@@ -1,6 +1,33 @@
 local M = {}
 
+function M.language ()
+    debug.setmetatable(function()end, {
+        __pow = function (f, v)
+            return function (...)
+                return f(v, ...)
+            end
+        end,
+        __shr = function (s, f)
+            return f(s)
+        end,
+    })
+end
+
 -- SOURCES
+
+function M.from (v, ...)
+    if ... ~= nil then
+        return M.fr_range(v, ...)
+    elseif v==nil or type(v)=='number' then
+        return M.fr_counter(v)
+    elseif type(v) == 'table' then
+        return M.fr_table(v)
+    elseif type(v) == 'coroutine' then
+        return M.fr_coroutine(v)
+    else
+        return M.fr_const(v)
+    end
+end
 
 function M.fr_const (v)
     return function ()

@@ -15,7 +15,7 @@ end
 
 do
     print("Testing...", "counter 2")
-    local my_array = S.take(5, S.fr_counter())
+    local my_array = S.take(5, S.from())
     for v in my_array do
         out(v)
     end
@@ -30,7 +30,7 @@ do
       "Caleb",
       "Dennis"
     }
-    local names_with_b = S.filter(function(it) return it:find("[Bb]") end, S.fr_table(names))
+    local names_with_b = S.filter(function(it) return it:find("[Bb]") end, S.from(names))
     local v = S.to_table(names_with_b)
     assert(#v == 2)
     assert(v[1] == "Beatrice")
@@ -54,7 +54,7 @@ end
 
 do
     print("Testing...", "each 1")
-    local r = S.fr_range(1, 10) -- all the numbers from 1 to 10 (inclusive)
+    local r = S.from(1, 10) -- all the numbers from 1 to 10 (inclusive)
     local e = S.filter(function(it) return it%2==0 end, r) -- take only even numbers
     local t = {}
     S.to_each(function (it) t[#t+1]=it end, e)
@@ -83,7 +83,7 @@ do
     local numbers = {2, 1, 3, 4, 7, 11, 18, 29}
 
     local is_even = function (it) return (it % 2) == 0 end
-    local vs1 = S.to_table(S.filter(is_even, S.fr_table(numbers)))
+    local vs1 = S.to_table(S.filter(is_even, S.from(numbers)))
 
     local vs2 = S.to_table(S.filter(function (it) return (it % 2) == 0 end, S.fr_table(numbers)))
     assert(#vs1==3 and #vs2==3 and vs1[1]==2 and vs2[2]==4 and vs1[3]==18)
@@ -98,7 +98,7 @@ do
     }
     -- map will iterate through each row, and the lambda
     -- indexes each to retrieve the first element
-    local v = S.map(function(it) return it[1] end, S.fr_table(matrix))
+    local v = S.map(function(it) return it[1] end, S.from(matrix))
     v = S.to_table(v)
     assert(#v==3 and v[1]==1 and v[2]==4 and v[3]==7)
 end

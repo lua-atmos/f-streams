@@ -6,7 +6,7 @@ assert(mapped() == 84)
 assert(mapped() == 84)
 assert(mapped() == 84)
 
-local s = S.fr_range(1, 10)
+local s = S.from(1, 10)
 s = S.filter(function(x) return x % 2 == 0 end, s)
 s = S.map(function(x) return x * 2 end, s)
 local values = S.to_table(s)

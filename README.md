@@ -4,14 +4,26 @@
     [`v0.1`](https://github.com/lua-atmos/f-streams/tree/v0.1)
 ]
 
-`f-streams` is yet another streams library for Lua:
+`f-streams` is a pull-based streams library for Lua:
 
 - A stream is simply a function or any other value with a `__call` metamethod.
+- A stream can represents infinite lazy lists.
 - A stream produces a new value each time is called.
   When a stream returns `nil`, it indicates its termination.
   Then, all subsequent calls to the stream must also return `nil`.
 - A stream can be combined with other streams or values to create new streams.
 - A stream can be iterated over using Lua's generic [for][lua-for] loop.
+
+The example that follows prints the first three odd numbers multiplied by `2`:
+
+```
+_ = S.from(1)                                       -- 1, 2, 3, ...
+    >> S.filter ^ (function(x) return x%2 == 1 end) -- 1, 3, 5, ...
+    >> S.map ^ (function(x) return x * 2 end)       -- 2, 6, 10, ...
+    >> S.take ^ 3                                   -- 2, 6, 10
+    >> S.to_each ^ (function (v)
+        print(v)                                    -- 2 / 6 / 10
+    end)```
 
 The API is divided into three groups: *sources*, *combinators* and *sinks*.
 
@@ -23,20 +35,31 @@ terminates.
 [lua-for]: https://www.lua.org/manual/5.4/manual.html#3.3.5
 
 - Sources
-    - `fr_const(v)`:    stream of constants `v`
+    - `fr_const(v)`:    stream of constant `v`
     - `fr_counter(a)`:  stream of numbers from `a` to infinity
     - `fr_range(a,b)`:  stream of numbers from `a` to `b`
     - `fr_table(t)`:    stream of values from `t`
+    - `from(v)`:        calls the appropriate `fr_*` for `v`
 
 <!--
     - `fr_value(v)`:    stream of a single value `v`
 -->
 
+S.language()
+
+S.fr_range(1,10)
+    >> S.filter ^ (function(it) return it%2==0 end)
+    >> S.to_each ^ (function (it) t[#t+1]=it end)
+
+S.to_each ^ (function (it) t[#t+1]=it end)
+    << S.filter ^ (function(it) return it%2==0 end)
+    << S.fr_range(1,10)
+
 - Combinators
-    - `map(s,f)`:       applies `f` to each value of `s`
-    - `filter(s,f)`:    filters `s` based on `f`
-    - `take(s,n)`:      takes the first `n` values of `s`
-    - `skip(s,n)`:      skips the first `n` values of `s`
+    - `map(f,s)`:       applies `f` to each value of `s`
+    - `filter(f,s)`:    filters `s` based on `f`
+    - `take(n,s)`:      takes the first `n` values of `s`
+    - `skip(n,s)`:      skips the first `n` values of `s`
     - `distinct(s)`:    removes duplicate values of `s`
     - `flatten(ss)`:    flattens a stream of streams into a single stream
 
@@ -51,13 +74,13 @@ terminates.
 -->
 
 - Sinks
-    - `to_table(s)`:    appends to a table all values of `s`
-    - `to_each(s,f)`:   applies `f` to each value of `s`
-    - `to_acc(s,f)`:    accumulates all values of `s` based on `f(acc,v)`
-        - `to_sum(s)`:  sum all values of `s`
-        - `to_mul(s)`:  multiply all values of `s`
-        - `to_min(s)`:  minimum value of `s`
-        - `to_max(s)`:  maximum value of `s`
+    - `to_table(s)`:        appends to a table all values of `s`
+    - `to_each(f,s)`:       applies `f` to each value of `s`
+    - `to_acc(f,acc,s)`:    accumulates all values `v` in `s` based on `acc=f(acc,v)`
+        - `to_sum(s)`:      sum all values of `s`
+        - `to_mul(s)`:      multiply all values of `s`
+        - `to_min(s)`:      minimum value of `s`
+        - `to_max(s)`:      maximum value of `s`
 
 <!--
     - only if sorts as it goes...
