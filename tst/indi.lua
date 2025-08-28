@@ -2,8 +2,8 @@ local S = require("streams")
 
 print "--- SOURCES ---"
 
-print("Testing...", "const 1")
-local s = S.fr_const(42)
+print("Testing...", "consts 1")
+local s = S.fr_consts(42)
 assert(s() == 42)
 assert(s() == 42)
 assert(s() == 42)
@@ -95,7 +95,6 @@ do
         assert(t[i] == i)
     end
 end
-
 
 print("Testing...", "coro 1")
 local co1 = coroutine.create(function ()

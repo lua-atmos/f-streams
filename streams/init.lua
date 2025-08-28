@@ -24,11 +24,11 @@ function M.from (v, ...)
     elseif type(v) == 'coroutine' then
         return M.fr_coroutine(v)
     else
-        return M.fr_const(v)
+        return M.fr_consts(v)
     end
 end
 
-function M.fr_const (v)
+function M.fr_consts (v)
     return function ()
         return v
     end

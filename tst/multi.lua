@@ -1,6 +1,6 @@
 local S = require("streams")
 
-local s = S.fr_const(42)
+local s = S.fr_consts(42)
 local mapped = S.map(s, function(x) return x * 2 end)
 assert(mapped() == 84)
 assert(mapped() == 84)
