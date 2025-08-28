@@ -163,6 +163,10 @@ end
 
 -- SINKS
 
+function M.to_first (s)
+    return s()
+end
+
 function M.to_table (s)
     local t = {}
     local v

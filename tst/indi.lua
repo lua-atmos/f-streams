@@ -172,3 +172,6 @@ assert(reduced == 15)
 s = S.fr_range(1, 5)
 S.to_each(s, function(x) assert(x >= 1 and x <= 5) end)
 assert(s() == nil)
+
+s = S.from(10)
+assert(S.to_first(s) == 10)

@@ -59,6 +59,34 @@ assert(s() == 10)
 assert(s() == nil)
 assert(s() == nil)
 
+print "--- TO_FIRST ---"
+do
+    do
+        local function my_stream()
+            local i = 0
+            return function()
+                i = i + 1
+                if i <= 3 then
+                    return i
+                end
+            end
+        end
+        local mapped_stream = S.map(my_stream(), function(x) return x * 2 end)
+        local first_value = S.to_first(mapped_stream)
+        assert(first_value == 2)
+    end
+
+    do
+        local function my_stream()
+            return function()
+                return nil
+            end
+        end
+        local first_value = S.to_first(my_stream())
+        assert(first_value == nil)
+    end
+end
+
 print("Testing...", "test 10: concat map")
 local s1 = S.from({1, 2, 3})
 local s2 = S.from({4, 5, 6})

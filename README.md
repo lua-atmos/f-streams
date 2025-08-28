@@ -64,6 +64,7 @@ mapi
 -->
 
 - Sinks
+    - `to_first(s)`:        first value of `s`
     - `to_table(s)`:        appends to a table all values of `s`
     - `to_each(s,f)`:       applies `f` to each value of `s`
     - `to_acc(s,acc,f)`:    accumulates all values `v` in `s` based on `acc=f(acc,v)`
@@ -76,7 +77,6 @@ mapi
     - only if sorts as it goes...
     - `to_sorted(s)`: collects the values of the stream `s` into a sorted table
     - to_last
-    - to_first
     - to_n
 -->
 
