@@ -37,29 +37,26 @@ terminates.
 [lua-for]: https://www.lua.org/manual/5.4/manual.html#3.3.5
 
 - Sources
-    - `fr_const(v)`:    stream of constant `v`
+    - `fr_consts(v)`:   stream of constants `v`
     - `fr_counter(a)`:  stream of numbers from `a` to infinity
     - `fr_range(a,b)`:  stream of numbers from `a` to `b`
     - `fr_table(t)`:    stream of values from `t`
     - `from(v)`:        calls the appropriate `fr_*` for `v`
 
-<!--
-    - `fr_single(v)`:    stream of a single value `v`
--->
-
 - Combinators
-    - `map(s,f)`:       applies `f` to each value of `s`
-    - `filter(s,f)`:    filters `s` based on `f`
-    - `take(s,n)`:      takes the first `n` values of `s`
-    - `skip(s,n)`:      skips the first `n` values of `s`
+    - `concat(s1,s2)`:  all values of `s1`, then all values of `s2`
     - `distinct(s)`:    removes duplicate values of `s`
-    - `flatten(ss)`:    flattens a stream of streams into a single stream
-
+    - `loop(fs)`:       repeats the stream `s=fs()` indefinitely
+    - `filter(s,f)`:    filters `s` based on `f`
+    - `flatten(ss)`:    flattens a stream of streams `ss` into a single stream
+    - `map(s,f)`:       applies `f` to each value of `s`
+    - `skip(s,n)`:      skips the first `n` values of `s`
+    - `take(s,n)`:      takes the first `n` values of `s`
 <!--
 - merge
+        - `single(s)`:  `take(s,1)`
 - `zip(...)`: combines two streams `s1` and `s2` into a single stream
 - `concat(...)`: concatenates two streams `s1` and `s2` into a single stream
-- `cycle(s)`: repeats the stream `s` infinitely
 - `drop_while(s, f)`: drops values from the stream `s` while the function `f` is true
 - `take_while(s, f)`: takes values from the stream `s` while the function `f` is true
 - `partition(s, f)`: partitions the stream `s` into two or more streams based on the function `f`

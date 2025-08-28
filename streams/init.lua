@@ -85,6 +85,18 @@ function M.concat(s1, s2)
     end
 end
 
+function M.loop (fs)
+    local s = fs()
+    return function()
+        local v = s()
+        if v == nil then
+            s = fs()
+            v = s()
+        end
+        return v
+    end
+end
+
 function M.map (s, f)
     return function()
         local v = s()

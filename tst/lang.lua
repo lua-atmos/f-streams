@@ -39,4 +39,25 @@ for i = 4, 6 do
     assert(t[i] == i*2 + 1)
 end
 
+print "--- LOOP ---"
+do
+    do
+        local function F ()
+            local i = 0
+            return function()
+                i = i + 1
+                if i <= 3 then
+                    return i
+                end
+            end
+        end
+        local t = S.loop(F):take(5):to_table()
+        assert(#t == 5)
+        assert(t[1] == 1)
+        assert(t[2] == 2)
+        assert(t[3] == 3)
+        assert(t[4] == 1)
+        assert(t[5] == 2)
+    end
+end
 

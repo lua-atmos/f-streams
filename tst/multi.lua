@@ -96,3 +96,47 @@ assert(t[1] == 2)
 assert(t[2] == 4)
 assert(t[3] == 6)
 assert(t[4] == 8)
+
+print "--- LOOP ---"
+do
+    do
+        local function my_stream()
+            local i = 0
+            return function()
+                i = i + 1
+                if i <= 3 then
+                    return i
+                end
+            end
+        end
+
+        local loop_stream = S.loop(my_stream)
+        local take_stream = S.take(loop_stream, 10)
+        local values = {}
+        for value in take_stream do
+            table.insert(values, value)
+        end
+        assert(#values == 10)
+        assert(values[1] == 1)
+        assert(values[2] == 2)
+        assert(values[3] == 3)
+        assert(values[4] == 1)
+        assert(values[5] == 2)
+        assert(values[6] == 3)
+        assert(values[7] == 1)
+        assert(values[8] == 2)
+        assert(values[9] == 3)
+        assert(values[10] == 1)
+    end
+    do
+        local function my_stream()
+            return function()
+                return nil
+            end
+        end
+
+        local loop_stream = S.loop(my_stream)
+        local value = loop_stream()
+        assert(value == nil)
+    end
+end

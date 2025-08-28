@@ -96,6 +96,35 @@ do
     end
 end
 
+print "--- LOOP ---"
+do
+    local function my_stream()
+        local i = 0
+        return function()
+            i = i + 1
+            if i <= 3 then
+                return i
+            end
+        end
+    end
+
+    local loop_stream = S.loop(my_stream)
+    local values = {}
+    for i = 1, 10 do
+        table.insert(values, loop_stream())
+    end
+    assert(values[1] == 1)
+    assert(values[2] == 2)
+    assert(values[3] == 3)
+    assert(values[4] == 1)
+    assert(values[5] == 2)
+    assert(values[6] == 3)
+    assert(values[7] == 1)
+    assert(values[8] == 2)
+    assert(values[9] == 3)
+    assert(values[10] == 1)
+end
+
 print("Testing...", "coro 1")
 local co1 = coroutine.create(function ()
     coroutine.yield(1)
