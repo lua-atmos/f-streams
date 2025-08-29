@@ -6,14 +6,24 @@
 
 `f-streams` is a pull-based streams library for Lua:
 
-- A stream is any value with a `__call` and `__close` metamethods.
 - A stream produces a new value each time is called.
 - A stream terminates when it returns `nil`.
-- A stream can be combined with other streams or values to create new streams.
+- A stream can use `:` combinators to create stream pipelines.
 - A stream can be iterated over using Lua's generic [for][lua-for] loop.
 - A stream can represent infinite lazy lists.
 
-The example that follows prints the first three odd numbers multiplied by `2`:
+A simple example that produces the values `1`, `2`, and `3`:
+
+```
+local S = require "streams"
+local s = S.from(1,3)
+print(s())  -- 1
+print(s())  -- 2
+print(s())  -- 3
+print(s())  -- nil
+```
+
+An example that prints the first three odd numbers multiplied by `2`:
 
 ```
 local S = require "streams"
@@ -52,16 +62,6 @@ terminates.
     - `map(s,f)`:       applies `f` to each value of `s`
     - `skip(s,n)`:      skips the first `n` values of `s`
     - `take(s,n)`:      takes the first `n` values of `s`
-<!--
-- merge
-        - `single(s)`:  `take(s,1)`
-- `zip(...)`: combines two streams `s1` and `s2` into a single stream
-- `concat(...)`: concatenates two streams `s1` and `s2` into a single stream
-- `drop_while(s, f)`: drops values from the stream `s` while the function `f` is true
-- `take_while(s, f)`: takes values from the stream `s` while the function `f` is true
-- `partition(s, f)`: partitions the stream `s` into two or more streams based on the function `f`
-mapi
--->
 
 - Sinks
     - `to_first(s)`:        first value of `s`
@@ -74,6 +74,17 @@ mapi
         - `to_max(s)`:      maximum value of `s`
 
 <!--
+- to() que consome geral e retorna algo (resultado do acc?)
+- acc_stop
+- merge
+        - `single(s)`:  `take(s,1)`
+- `zip(...)`: combines two streams `s1` and `s2` into a single stream
+- `concat(...)`: concatenates two streams `s1` and `s2` into a single stream
+- `drop_while(s, f)`: drops values from the stream `s` while the function `f` is true
+- `take_while(s, f)`: takes values from the stream `s` while the function `f` is true
+- `partition(s, f)`: partitions the stream `s` into two or more streams based on the function `f`
+mapi
+
     - only if sorts as it goes...
     - `to_sorted(s)`: collects the values of the stream `s` into a sorted table
     - to_last

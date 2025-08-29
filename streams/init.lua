@@ -1,6 +1,6 @@
 local M = {}
 
-local MT = {
+M.mt = {
     __call  = function (t) return t.f() end,
     __close = function () end,
     __index = M,
@@ -28,7 +28,7 @@ function M.fr_consts (v)
     local f = function ()
         return v
     end
-    return setmetatable({f=f}, MT)
+    return setmetatable({f=f}, M.mt)
 end
 
 function M.fr_counter (i)
@@ -45,7 +45,7 @@ function M.fr_range (a, b)
         a = a + 1
         return v
     end
-    return setmetatable({f=f}, MT)
+    return setmetatable({f=f}, M.mt)
 end
 
 function M.fr_table (t)
@@ -57,7 +57,7 @@ function M.fr_table (t)
             return v
         end
     end
-    return setmetatable({f=f}, MT)
+    return setmetatable({f=f}, M.mt)
 end
 
 function M.fr_coroutine (co)
@@ -68,7 +68,7 @@ function M.fr_coroutine (co)
             end
         end)(coroutine.resume(co))
     end
-    return setmetatable({f=f}, MT)
+    return setmetatable({f=f}, M.mt)
 end
 
 -- COMBINATORS
@@ -83,7 +83,7 @@ function M.concat(s1, s2)
         end
         return v
     end
-    return setmetatable({f=f}, MT)
+    return setmetatable({f=f}, M.mt)
 end
 
 function M.loop (fs)
@@ -96,7 +96,7 @@ function M.loop (fs)
         end
         return v
     end
-    return setmetatable({f=f}, MT)
+    return setmetatable({f=f}, M.mt)
 end
 
 function M.map (s, f)
@@ -106,7 +106,7 @@ function M.map (s, f)
             return f(v)
         end
     end
-    return setmetatable({f=f}, MT)
+    return setmetatable({f=f}, M.mt)
 end
 
 function M.filter (s, f)
@@ -117,7 +117,7 @@ function M.filter (s, f)
         until v == nil or f(v)
         return v
     end
-    return setmetatable({f=f}, MT)
+    return setmetatable({f=f}, M.mt)
 end
 
 function M.take (s, n)
@@ -128,7 +128,7 @@ function M.take (s, n)
             return s()
         end
     end
-    return setmetatable({f=f}, MT)
+    return setmetatable({f=f}, M.mt)
 end
 
 function M.skip (s, n)
@@ -150,7 +150,7 @@ function M.distinct (s)
         end
         return v
     end
-    return setmetatable({f=f}, MT)
+    return setmetatable({f=f}, M.mt)
 end
 
 function M.flatten (ss)
@@ -165,7 +165,7 @@ function M.flatten (ss)
             end
         end
     end
-    return setmetatable({f=f}, MT)
+    return setmetatable({f=f}, M.mt)
 end
 
 -- SINKS
@@ -174,61 +174,44 @@ function M.to_first (s)
     return s()
 end
 
-function M.to_table (s)
-    local t = {}
-    local v
-    repeat
-        v = s()
-        if v ~= nil then
-            table.insert(t, v)
-        end
-    until v == nil
-    return t
-end
-
-function M.to_vector (s)
-    return M.to_table(s)
-end
-
 function M.to_acc (s, acc, f)
-    local v
-    repeat
+    local s <close> = s
+    local v = s()
+    while v ~= nil do
+        acc = f(acc, v)
         v = s()
-        if v ~= nil then
-            if acc == nil then
-                acc = v
-            else
-                acc = f(acc, v)
-            end
-        end
-    until v == nil
+    end
     return acc
 end
 
-do  -- all based on `to_acc`
-    function M.to_sum(s)
-        return M.to_acc(s, 0, function(a, b) return a + b end)
+do  -- all derived from `to_acc`
+    function M.to_each(s, f)
+        return M.to_acc(s, nil, function(a,x) f(x) ; return true end)
     end
-    function M.to_mul(s)
-        return M.to_acc(s, 1, function(a, b) return a * b end)
-    end
-    function M.to_min(s)
-        return M.to_acc(s, math.huge, function(a, b) return math.min(a, b) end)
-    end
-    function M.to_max(s)
-        return M.to_acc(s, -math.huge, function(a, b) return math.max(a, b) end)
-    end
-end
 
-function M.to_each (s, f)
-    local s <close> = s
-    local v
-    repeat
-        v = s()
-        if v ~= nil then
-            f(v)
-        end
-    until v == nil
+    function M.to_max(s)
+        return M.to_acc(s, -math.huge, function(a,x) return math.max(a,x) end)
+    end
+
+    function M.to_min(s)
+        return M.to_acc(s, math.huge, function(a,x) return math.min(a,x) end)
+    end
+
+    function M.to_mul(s)
+        return M.to_acc(s, 1, function(a,x) return a*x end)
+    end
+
+    function M.to_sum(s)
+        return M.to_acc(s, 0, function(a,x) return a+x end)
+    end
+
+    function M.to_table(s)
+        return M.to_acc(s, {}, function(a,x) a[#a+1]=x ; return a end)
+    end
+
+    function M.to_vector (s)
+        return M.to_table(s)
+    end
 end
 
 return M
