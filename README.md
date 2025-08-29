@@ -6,7 +6,7 @@
 
 `f-streams` is a pull-based streams library for Lua:
 
-- A stream is a function or any other value with a `__call` metamethod.
+- A stream is any value with a `__call` and `__close` metamethods.
 - A stream produces a new value each time is called.
 - A stream terminates when it returns `nil`.
 - A stream can be combined with other streams or values to create new streams.
@@ -18,8 +18,8 @@ The example that follows prints the first three odd numbers multiplied by `2`:
 ```
 local S = require "streams"
 S.from(1)                                       -- 1, 2, 3, ...
-    :filter(function(x) return x%2 == 1 end)    -- 1, 3, 5, ...
-    :map(function(x) return x * 2 end)          -- 2, 6, 10, ...
+    :filter(function (x) return x%2 == 1 end)   -- 1, 3, 5, ...
+    :map(function (x) return x * 2 end)         -- 2, 6, 10, ...
     :take(3)                                    -- 2, 6, 10
     :to_each(function (v)
         print(v)                                -- 2 / 6 / 10
@@ -38,6 +38,7 @@ terminates.
 - Sources
     - `fr_consts(v)`:   stream of constants `v`
     - `fr_counter(a)`:  stream of numbers from `a` to infinity
+    - `fr_function(f)`: stream of `f()` results
     - `fr_range(a,b)`:  stream of numbers from `a` to `b`
     - `fr_table(t)`:    stream of values from `t`
     - `from(v)`:        calls the appropriate `fr_*` for `v`
@@ -82,7 +83,7 @@ mapi
 As a fundamental limitation, `f-streams` does not support a [merge][rx-merge]
 combinator to read from multiple streams concurrently.
 However, this limitation is addressed by [`lua-atmos`](lua-atmos), which
-extends `f-streams` with such combinator.
+extends `f-streams` with equivalent combinators.
 
 [rx-merge]: https://rxmarbles.com/#merge
 

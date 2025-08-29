@@ -1,10 +1,10 @@
 local M = {}
 
-local F = function () end
-debug.setmetatable(F, {
+local MT = {
+    __call  = function (t) return t.f() end,
     __close = function () end,
     __index = M,
-})
+}
 
 -- SOURCES
 

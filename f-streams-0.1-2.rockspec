@@ -35,6 +35,9 @@ description = {
    homepage = "https://github.com/lua-atmos/f-streams",
    license = "MIT",
 }
+dependencies = {
+   "lua ~> 5.4",
+}
 build = {
    type = "builtin",
    modules = {
