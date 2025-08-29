@@ -73,7 +73,7 @@ end
 
 -- COMBINATORS
 
-function M.concat(s1, s2)
+function M.concat (s1, s2)
     local cur = s1
     local f = function ()
         local v = cur()
