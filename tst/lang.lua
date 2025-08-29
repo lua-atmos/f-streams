@@ -1,5 +1,4 @@
 local S = require("streams")
-S.methods(true)
 
 print("Testing...", "test 01: range, map, table")
 vs = S.fr_range(1, 5)

@@ -1,14 +1,10 @@
 local M = {}
 
-function M.methods (on)
-    local F = function () end
-    if on then
-        assert(debug.getmetatable(F) == nil)
-        debug.setmetatable(F, { __index=M })
-    else
-        debug.setmetatable(F, nil)
-    end
-end
+local F = function () end
+debug.setmetatable(F, {
+    __close = function () end,
+    __index = M,
+})
 
 -- SOURCES
 
@@ -214,6 +210,7 @@ do  -- all based on `to_acc`
 end
 
 function M.to_each (s, f)
+    local s <close> = s
     local v
     repeat
         v = s()
