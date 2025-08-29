@@ -25,9 +25,10 @@ function M.from (v, ...)
 end
 
 function M.fr_consts (v)
-    return function ()
+    local f = function ()
         return v
     end
+    return setmetatable({f=f}, MT)
 end
 
 function M.fr_counter (i)
@@ -36,7 +37,7 @@ end
 
 function M.fr_range (a, b)
     a = a or 1
-    return function()
+    local f = function ()
         if b and a>b then
             return nil
         end
@@ -44,34 +45,37 @@ function M.fr_range (a, b)
         a = a + 1
         return v
     end
+    return setmetatable({f=f}, MT)
 end
 
 function M.fr_table (t)
     local i = 1
-    return function()
+    local f = function ()
         if i <= #t then
             local v = t[i]
             i = i + 1
             return v
         end
     end
+    return setmetatable({f=f}, MT)
 end
 
 function M.fr_coroutine (co)
-    return function()
+    local f = function ()
         return (function (_, ...)
             if select('#',...) >= 0 then
                 return ...
             end
         end)(coroutine.resume(co))
     end
+    return setmetatable({f=f}, MT)
 end
 
 -- COMBINATORS
 
 function M.concat(s1, s2)
     local cur = s1
-    return function()
+    local f = function ()
         local v = cur()
         if v == nil then
             cur = s2
@@ -79,11 +83,12 @@ function M.concat(s1, s2)
         end
         return v
     end
+    return setmetatable({f=f}, MT)
 end
 
 function M.loop (fs)
     local s = fs()
-    return function()
+    local f = function ()
         local v = s()
         if v == nil then
             s = fs()
@@ -91,35 +96,39 @@ function M.loop (fs)
         end
         return v
     end
+    return setmetatable({f=f}, MT)
 end
 
 function M.map (s, f)
-    return function()
+    local f = function()
         local v = s()
         if v ~= nil then
             return f(v)
         end
     end
+    return setmetatable({f=f}, MT)
 end
 
 function M.filter (s, f)
-    return function()
+    local f =  function()
         local v
         repeat
             v = s()
         until v == nil or f(v)
         return v
     end
+    return setmetatable({f=f}, MT)
 end
 
 function M.take (s, n)
     local i = 0
-    return function()
+    local f =  function()
         if i < n then
             i = i + 1
             return s()
         end
     end
+    return setmetatable({f=f}, MT)
 end
 
 function M.skip (s, n)
@@ -131,7 +140,7 @@ end
 
 function M.distinct (s)
     local seen = {}
-    return function()
+    local f = function ()
         local v
         repeat
             v = s()
@@ -141,11 +150,12 @@ function M.distinct (s)
         end
         return v
     end
+    return setmetatable({f=f}, MT)
 end
 
 function M.flatten (ss)
     local current_stream = ss()
-    return function()
+    local f = function ()
         while current_stream do
             local v = current_stream()
             if v ~= nil then
@@ -155,6 +165,7 @@ function M.flatten (ss)
             end
         end
     end
+    return setmetatable({f=f}, MT)
 end
 
 -- SINKS
