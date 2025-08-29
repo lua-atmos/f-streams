@@ -74,21 +74,25 @@ terminates.
         - `to_max(s)`:      maximum value of `s`
 
 <!--
-- to() que consome geral e retorna algo (resultado do acc?)
-- acc_stop
-- merge
-        - `single(s)`:  `take(s,1)`
-- `zip(...)`: combines two streams `s1` and `s2` into a single stream
-- `concat(...)`: concatenates two streams `s1` and `s2` into a single stream
-- `drop_while(s, f)`: drops values from the stream `s` while the function `f` is true
-- `take_while(s, f)`: takes values from the stream `s` while the function `f` is true
-- `partition(s, f)`: partitions the stream `s` into two or more streams based on the function `f`
-mapi
-
-    - only if sorts as it goes...
+- Sources
+    - S.fr_vector
+- Combinators
+    - `zip(...)`: combines two streams `s1` and `s2` into a single stream
+    - `single(s)`:  `take(s,1)`
+    - `drop_while(s, f)`: drops values from the stream `s` while the function `f` is true
+    - `take_while(s, f)`: takes values from the stream `s` while the function `f` is true
+        - take_while, skip_while
+        - take_until, skip_until
+    - `partition(s, f)`: partitions the stream `s` into two or more streams based on the function `f`
+- Sinks
+    - to() que consome geral e retorna algo (resultado do acc?)
+    - to_acc_stop
     - `to_sorted(s)`: collects the values of the stream `s` into a sorted table
+        - only if sorts as it goes...
     - to_last
     - to_n
+    - S.to_vector
+    - S.to_unit
 -->
 
 As a fundamental limitation, `f-streams` does not support a [merge][rx-merge]
