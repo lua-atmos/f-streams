@@ -64,14 +64,14 @@ terminates.
     - `take(s,n)`:      takes the first `n` values of `s`
 
 - Sinks
-    - `to_first(s)`:        first value of `s`
-    - `to_table(s)`:        appends to a table all values of `s`
-    - `to_each(s,f)`:       applies `f` to each value of `s`
-    - `to_acc(s,acc,f)`:    accumulates all values `v` in `s` based on `acc=f(acc,v)`
-        - `to_sum(s)`:      sum all values of `s`
-        - `to_mul(s)`:      multiply all values of `s`
-        - `to_min(s)`:      minimum value of `s`
-        - `to_max(s)`:      maximum value of `s`
+    - `to_first(s)`:        first value of `s`: `s()`
+    - `to_table(s)`:        appends all values of `s` to a table: `{ s(), s(), ... }`
+    - `to_each(s,f)`:       applies all values of `s` with `f`: `f(s()) ; f(s()) ; ...`
+    - `to_acc(s,acc,f)`:    accumulates all values of `s` based on `f`: `f(...f(f(z,s()),s())...)`
+        - `to_sum(s)`:      sums all values of `s`: `s() + s() + ...`
+        - `to_mul(s)`:      multiplies all values of `s`: `s() * s() * ...`
+        - `to_min(s)`:      minimum value of `s`: `min(...min(s(),s())...)`
+        - `to_max(s)`:      maximum value of `s`: `max(...max(s(),s())...)`
 
 <!--
 - Sources
@@ -86,7 +86,7 @@ terminates.
     - `partition(s, f)`: partitions the stream `s` into two or more streams based on the function `f`
 - Sinks
     - to() que consome geral e retorna algo (resultado do acc?)
-    - to_acc_stop
+    - to_acc_stop, to_acc_until gera o que passa e termina, to_acc_while nao gera o que falha e termina
     - `to_sorted(s)`: collects the values of the stream `s` into a sorted table
         - only if sorts as it goes...
     - to_last
