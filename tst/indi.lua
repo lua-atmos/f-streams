@@ -68,10 +68,10 @@ values = S.to_table(s)
 assert(#values == 5 and values[1] == 6 and values[5] == 10)
 assert(s() == nil)
 
-s = S.fr_range(1, 5)
+s = S.fr_table { 1, 3, 1, 1, 2, 3 }
 s = S.distinct(s)
 values = S.to_table(s)
-assert(#values == 5 and values[1] == 1 and values[5] == 5)
+assert(#values==3 and values[1]==1 and values[2]==3 and values[3]==2)
 
 print "--- CONCAT ---"
 do

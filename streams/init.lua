@@ -1,12 +1,14 @@
 local M = {}
 
 M.mt = {
-    __call  = function (t) return t.f() end,
+    __call  = function (t) return t:f() end,
     __close = function () end,
     __index = M,
 }
 
+-------------------------------------------------------------------------------
 -- SOURCES
+-------------------------------------------------------------------------------
 
 function M.from (v, ...)
     if type(v) == 'function' then
@@ -24,151 +26,242 @@ function M.from (v, ...)
     end
 end
 
-function M.fr_consts (v)
-    local f = function ()
-        return v
-    end
-    return setmetatable({f=f}, M.mt)
+-------------------------------------------------------------------------------
+
+local function fr_consts (t)
+    return t.v
 end
+
+function M.fr_consts (v)
+    local t = {
+        v = v,
+        f = fr_consts,
+    }
+    return setmetatable(t, M.mt)
+end
+
+-------------------------------------------------------------------------------
+
+local function fr_coroutine (t)
+    return (function (_, ...)
+        if select('#',...) >= 0 then
+            return ...
+        end
+    end)(coroutine.resume(t.co))
+end
+
+function M.fr_coroutine (co)
+    local t = {
+        co = co,
+        f  = fr_coroutine,
+    }
+    return setmetatable(t, M.mt)
+end
+
+-------------------------------------------------------------------------------
 
 function M.fr_counter (i)
     return M.fr_range(i)
 end
 
+-------------------------------------------------------------------------------
+
+local function fr_range (t)
+    if t.b and t.a>t.b then
+        return nil
+    end
+    local v = t.a
+    t.a = t.a + 1
+    return v
+end
+
 function M.fr_range (a, b)
-    a = a or 1
-    local f = function ()
-        if b and a>b then
-            return nil
-        end
-        local v = a
-        a = a + 1
+    local t = {
+        a = a or 1,
+        b = b,
+        f = fr_range,
+    }
+    return setmetatable(t, M.mt)
+end
+
+-------------------------------------------------------------------------------
+
+local function fr_table (t)
+    if t.i <= #t.t then
+        local v = t.t[t.i]
+        t.i = t.i + 1
         return v
     end
-    return setmetatable({f=f}, M.mt)
 end
 
 function M.fr_table (t)
-    local i = 1
-    local f = function ()
-        if i <= #t then
-            local v = t[i]
-            i = i + 1
-            return v
-        end
-    end
-    return setmetatable({f=f}, M.mt)
+    local t = {
+        t = t,
+        i = 1,
+        f = fr_table,
+    }
+    return setmetatable(t, M.mt)
 end
 
-function M.fr_coroutine (co)
-    local f = function ()
-        return (function (_, ...)
-            if select('#',...) >= 0 then
-                return ...
-            end
-        end)(coroutine.resume(co))
-    end
-    return setmetatable({f=f}, M.mt)
-end
-
+-------------------------------------------------------------------------------
 -- COMBINATORS
+-------------------------------------------------------------------------------
+
+local function concat (t)
+    local x = t.cur()
+    if x==nil and t.cur==t.s1 then
+        t.cur = t.s2
+        return t.cur()
+    else
+        return x
+    end
+end
 
 function M.concat (s1, s2)
-    local cur = s1
-    local f = function ()
-        local v = cur()
+    local t = {
+        s1  = s1,
+        s2  = s2,
+        cur = s1,
+        f   = concat,
+    }
+    return setmetatable(t, M.mt)
+end
+
+-------------------------------------------------------------------------------
+
+local function distinct (t)
+    local v = t.s()
+    while true do
         if v == nil then
-            cur = s2
-            v = cur()
+            return nil
+        elseif not t.seen[v] then
+            t.seen[v] = true
+            return v
         end
-        return v
+        v = t.s()
     end
-    return setmetatable({f=f}, M.mt)
+end
+
+function M.distinct (s)
+    local t = {
+        s = s,
+        seen = {},
+        f = distinct,
+    }
+    return setmetatable(t, M.mt)
+end
+
+-------------------------------------------------------------------------------
+
+local function filter (t)
+    local v
+    repeat
+        v = t.s()
+    until v==nil or t.p(v)
+    return v
+end
+
+function M.filter(s, p)
+    local t = {
+        s = s,
+        p = p,
+        f = filter,
+    }
+    return setmetatable(t, M.mt)
+end
+
+-------------------------------------------------------------------------------
+
+local function flatten (t)
+    local x = t.cur()
+    while x == nil do
+        t.cur = t.src()
+        if t.cur == nil then
+            return nil
+        end
+        x = t.cur()
+    end
+    return x
+end
+
+function M.flatten (ss)
+    local t = {
+        src = ss,
+        cur = ss(),
+        f = flatten,
+    }
+    return setmetatable(t, M.mt)
+end
+
+-------------------------------------------------------------------------------
+
+local function loop (t)
+    local v = t.s()
+    if v == nil then
+        t.s = t.fs()
+        v = t.s()
+    end
+    return v
 end
 
 function M.loop (fs)
-    local s = fs()
-    local f = function ()
-        local v = s()
-        if v == nil then
-            s = fs()
-            v = s()
-        end
-        return v
+    local t = {
+        fs = fs,
+        s  = fs(),
+        f  = loop,
+    }
+    return setmetatable(t, M.mt)
+end
+
+-------------------------------------------------------------------------------
+
+local function map (t)
+    local v = t.s()
+    if v ~= nil then
+        return t.p(v)
     end
-    return setmetatable({f=f}, M.mt)
 end
 
 function M.map (s, f)
-    local f = function()
-        local v = s()
-        if v ~= nil then
-            return f(v)
-        end
-    end
-    return setmetatable({f=f}, M.mt)
+    local t = {
+        s = s,
+        p = f,
+        f = map,
+    }
+    return setmetatable(t, M.mt)
 end
 
-function M.filter (s, f)
-    local f =  function()
-        local v
-        repeat
-            v = s()
-        until v == nil or f(v)
-        return v
+-------------------------------------------------------------------------------
+
+local function take (t)
+    if t.cur < t.max then
+        t.cur = t.cur + 1
+        return t.s()
     end
-    return setmetatable({f=f}, M.mt)
 end
 
 function M.take (s, n)
-    local i = 0
-    local f =  function()
-        if i < n then
-            i = i + 1
-            return s()
-        end
-    end
-    return setmetatable({f=f}, M.mt)
+    local t = {
+        s   = s,
+        max = n,
+        cur = 0,
+        f   = take,
+    }
+    return setmetatable(t, M.mt)
 end
 
+-------------------------------------------------------------------------------
+
 function M.skip (s, n)
-    for _ = 1, n do
+    for _=1, n do
         s()
     end
     return s
 end
 
-function M.distinct (s)
-    local seen = {}
-    local f = function ()
-        local v
-        repeat
-            v = s()
-        until v == nil or not seen[v]
-        if v ~= nil then
-            seen[v] = true
-        end
-        return v
-    end
-    return setmetatable({f=f}, M.mt)
-end
-
-function M.flatten (ss)
-    local current_stream = ss()
-    local f = function ()
-        while current_stream do
-            local v = current_stream()
-            if v ~= nil then
-                return v
-            else
-                current_stream = ss()
-            end
-        end
-    end
-    return setmetatable({f=f}, M.mt)
-end
-
+-------------------------------------------------------------------------------
 -- SINKS
+-------------------------------------------------------------------------------
 
 function M.to_first (s)
     return s()
@@ -185,27 +278,27 @@ function M.to_acc (s, acc, f)
 end
 
 do  -- all derived from `to_acc`
-    function M.to_each(s, f)
+    function M.to_each (s, f)
         return M.to_acc(s, nil, function(a,x) f(x) ; return true end)
     end
 
-    function M.to_max(s)
+    function M.to_max (s)
         return M.to_acc(s, -math.huge, function(a,x) return math.max(a,x) end)
     end
 
-    function M.to_min(s)
+    function M.to_min (s)
         return M.to_acc(s, math.huge, function(a,x) return math.min(a,x) end)
     end
 
-    function M.to_mul(s)
+    function M.to_mul (s)
         return M.to_acc(s, 1, function(a,x) return a*x end)
     end
 
-    function M.to_sum(s)
+    function M.to_sum (s)
         return M.to_acc(s, 0, function(a,x) return a+x end)
     end
 
-    function M.to_table(s)
+    function M.to_table (s)
         return M.to_acc(s, {}, function(a,x) a[#a+1]=x ; return a end)
     end
 
