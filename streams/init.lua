@@ -20,9 +20,7 @@ function M.from (v, ...)
         assert(type(v)=='number' or M.is(v))
     end
 
-    if M.is(v) then
-        return M.fr_streams(v, ...)
-    elseif v==nil or type(v)=='number' then
+    if v==nil or type(v)=='number' then
         return M.fr_range(v, ...)
     elseif type(v) == 'table' then
         return M.fr_table(v)
@@ -89,20 +87,6 @@ function M.fr_range (a, b)
         a = a or 1,
         b = b,
         f = fr_range,
-    }
-    return setmetatable(t, M.mt)
-end
-
--------------------------------------------------------------------------------
-
-local function fr_streams (t)
-    return table.remove(t.ss, 1)
-end
-
-function M.fr_streams (...)
-    local t = {
-        ss = {...},
-        f = fr_streams,
     }
     return setmetatable(t, M.mt)
 end

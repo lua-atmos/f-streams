@@ -46,7 +46,7 @@ do
     local s1 = S.fr_range(1, 3)
     local s2 = S.fr_range(4, 6)
     local s3 = S.fr_range(7, 9)
-    local streams = S.from(s1, s2, s3)
+    local streams = S.from{s1, s2, s3}
     local vs = {}
     streams:to_each(function (s)
         s:to_each(function (v) vs[#vs+1]=v end)
@@ -91,7 +91,7 @@ do
     print("Testing...", "xseq 1")
     local s1 = S.from({1, 2, 3})
     local s2 = S.from({4, 5, 6})
-    local s_xseq = S.from(s1,s2):xseq()
+    local s_xseq = S.from{s1,s2}:xseq()
     local t = S.to_table(s_xseq)
     assert(#t == 6)
     for i=1, 6 do
@@ -101,7 +101,7 @@ do
     print("Testing...", "xseq 2")
     local s1 = S.from({})
     local s2 = S.from({1, 2, 3})
-    local s_xseq = S.from(s1, s2):xseq()
+    local s_xseq = S.from{s1, s2}:xseq()
     local t = S.to_table(s_xseq)
     assert(#t == 3)
     for i = 1, 3 do

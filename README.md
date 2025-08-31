@@ -50,7 +50,6 @@ terminates.
     - `fr_counter(a)`:      stream of numbers from `a` to infinity
     - `fr_function(f)`:     stream of `f()` results
     - `fr_range(a,b)`:      stream of numbers from `a` to `b`
-    - `fr_streams(...)`:    TODO
     - `fr_table(t)`:        stream of values from `t`
     - `from(v)`:            calls the appropriate `fr_*` for `v`
 

@@ -28,7 +28,7 @@ local s1 = S.from({1, 2, 3})
 local s2 = S.from({4, 5, 6})
 local s1_mapped = S.from{1,2,3}:map(function(x) return x * 2 end)
 local s2_mapped = s2:map(function(x) return x*2 + 1 end)
-local s_concat = S.from(s1_mapped,s2_mapped):xseq()
+local s_concat = S.from{s1_mapped,s2_mapped}:xseq()
 local t = S.to_table(s_concat)
 assert(#t == 6)
 for i = 1, 3 do
