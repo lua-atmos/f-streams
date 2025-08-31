@@ -168,3 +168,27 @@ do
         assert(value == nil)
     end
 end
+
+print '--- TO / TAP ---'
+
+do
+    local s = S.fr_range(1, 5)
+    local tapped = {}
+    s:tap(function(x) table.insert(tapped, x) end):to()
+    assert(#tapped == 5)
+    assert(tapped[1] == 1)
+    assert(tapped[2] == 2)
+    assert(tapped[3] == 3)
+    assert(tapped[4] == 4)
+    assert(tapped[5] == 5)
+
+    local s = S.fr_range(1, 5)
+    local tapped = {}
+    s:map(function(x) return x * 2 end):tap(function(x) table.insert(tapped, x) end):to()
+    assert(#tapped == 5)
+    assert(tapped[1] == 2)
+    assert(tapped[2] == 4)
+    assert(tapped[3] == 6)
+    assert(tapped[4] == 8)
+    assert(tapped[5] == 10)
+end

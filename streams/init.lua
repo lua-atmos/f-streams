@@ -252,6 +252,25 @@ end
 
 -------------------------------------------------------------------------------
 
+local function tap (t)
+    local v = t.s()
+    if v ~= nil then
+        t.p(v)
+        return v
+    end
+end
+
+function M.tap (s, f)
+    local t = {
+        s = s,
+        p = f,
+        f = tap,
+    }
+    return setmetatable(t, M.mt)
+end
+
+-------------------------------------------------------------------------------
+
 function M.skip (s, n)
     for _=1, n do
         s()
@@ -262,6 +281,10 @@ end
 -------------------------------------------------------------------------------
 -- SINKS
 -------------------------------------------------------------------------------
+
+function M.to (s)
+    M.to_acc(s, nil, function() end)
+end
 
 function M.to_first (s)
     return s()

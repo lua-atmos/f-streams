@@ -62,8 +62,10 @@ terminates.
     - `map(s,f)`:       applies `f` to each value of `s`
     - `skip(s,n)`:      skips the first `n` values of `s`
     - `take(s,n)`:      takes the first `n` values of `s`
+    - `tap(s,f)`:       applies `f` to each value of `s`
 
 - Sinks
+    - `to(s)`:              consumes and discards all values of `s`: `s() ; s() ; ...`
     - `to_first(s)`:        first value of `s`: `s()`
     - `to_table(s)`:        appends all values of `s` to a table: `{ s(), s(), ... }`
     - `to_each(s,f)`:       applies all values of `s` with `f`: `f(s()) ; f(s()) ; ...`

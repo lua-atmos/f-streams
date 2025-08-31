@@ -145,6 +145,30 @@ vs = S.to_table(s)
 assert(#vs==3 and vs[1]==1 and vs[2]==2 and vs[3]==3)
 ]]
 
+print "--- TAP ---"
+do
+    local s = S.fr_range(1, 5)
+    local tapped = {}
+    s:tap(function(x) table.insert(tapped, x) end):to()
+    assert(#tapped == 5)
+    assert(tapped[1] == 1)
+    assert(tapped[2] == 2)
+    assert(tapped[3] == 3)
+    assert(tapped[4] == 4)
+    assert(tapped[5] == 5)
+
+    local s = S.fr_range(1, 5)
+    local tapped = s:tap(function(x) end)
+    local result = {}
+    tapped:to_each(function(x) table.insert(result, x) end)
+    assert(#result == 5)
+    assert(result[1] == 1)
+    assert(result[2] == 2)
+    assert(result[3] == 3)
+    assert(result[4] == 4)
+    assert(result[5] == 5)
+end
+
 -- SINKS
 
 s = S.fr_range(1, 5)
@@ -175,3 +199,13 @@ assert(s() == nil)
 
 s = S.from(10)
 assert(S.to_first(s) == 10)
+
+print '--- TO ---'
+
+local s = S.fr_range(1, 5)
+s:to()
+assert(s() == nil)
+
+local s = S.fr_range(1, 5)
+local result = s:to()
+assert(result == nil)
