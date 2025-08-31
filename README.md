@@ -62,7 +62,7 @@ terminates.
     - `skip(s,n)`:      skips the first `n` values of `s`
     - `take(s,n)`:      takes the first `n` values of `s`
     - `tap(s,f)`:       applies `f` to each value of `s`
-    - `xseq(ss)`:       flattens a stream of streams `ss` into a single stream
+    - `xseq(ss)`:       TODO: flattens a stream of streams `ss` into a single stream
 
 - Sinks
     - `to(s)`:              consumes and discards all values of `s`: `s() ; s() ; ...`

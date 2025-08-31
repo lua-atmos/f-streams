@@ -2,7 +2,7 @@ local M = {}
 
 M.mt = {
     __call  = function (t) return t:f() end,
-    __close = function () end,
+    __close = function (t) if t.close then t:close() end end,
     __index = M,
 }
 
