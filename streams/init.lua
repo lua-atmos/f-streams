@@ -216,9 +216,9 @@ end
 -------------------------------------------------------------------------------
 
 local function map (t)
-    local v = t.s()
-    if v ~= nil then
-        return t.p(v)
+    local v = {t.s()}
+    if #v > 0 then
+        return t.p(table.unpack(v))
     end
 end
 
@@ -279,6 +279,28 @@ function M.skip (s, n)
 end
 
 -------------------------------------------------------------------------------
+
+local function zip (t)
+    local v1 = t.s1()
+    local v2 = t.s2()
+    if v1~=nil and v2~=nil then
+        return v1, v2
+    else
+        return nil
+    end
+end
+
+function M.zip (s1, s2)
+    local t = {
+        s1 = s1,
+        s2 = s2,
+        f  = zip,
+    }
+    return setmetatable(t, M.mt)
+end
+
+
+-------------------------------------------------------------------------------
 -- SINKS
 -------------------------------------------------------------------------------
 
@@ -292,17 +314,21 @@ end
 
 function M.to_acc (s, acc, f)
     local s <close> = s
-    local v = s()
-    while v ~= nil do
-        acc = f(acc, v)
-        v = s()
+    local v = {s()}
+    while #v > 0 do
+        acc = f(acc, table.unpack(v))
+        v = {s()}
     end
     return acc
 end
 
 do  -- all derived from `to_acc`
     function M.to_each (s, f)
-        return M.to_acc(s, nil, function(a,x) f(x) ; return true end)
+        return M.to_acc(s, nil, function(a,...) f(...) ; return true end)
+    end
+
+    function M.to_print (s)
+        return s:to_each(function (...) print(...) end)
     end
 
     function M.to_max (s)

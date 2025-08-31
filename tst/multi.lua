@@ -192,3 +192,23 @@ do
     assert(tapped[4] == 8)
     assert(tapped[5] == 10)
 end
+
+print '--- ZIP ---'
+do
+    local s1 = S.from(1, 5)
+    local s2 = S.from(6, 8)
+    local zipped = S.zip(s1, s2)
+    local result = {}
+    zipped:to_each(function(x,y) table.insert(result, {x,y}) end)
+    assert(#result == 3)
+    assert(result[1][1] == 1 and result[1][2] == 6)
+    assert(result[2][1] == 2 and result[2][2] == 7)
+    assert(result[3][1] == 3 and result[3][2] == 8)
+
+    local s1 = S.fr_consts(nil)
+    local s2 = S.from(6, 10)
+    local zipped = S.zip(s1, s2)
+    local result = {}
+    zipped:to_each(function(x,y) table.insert(result, {x,y}) end)
+    assert(#result == 0)
+end

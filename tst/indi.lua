@@ -169,6 +169,16 @@ do
     assert(result[5] == 5)
 end
 
+print "--- ZIP ---"
+do
+    local s1 = S.from(1, 5)
+    local s2 = S.from(6, 10)
+    local zipped = S.zip(s1, s2)
+    local t = {}
+    zipped:to_each(function(x,y) table.insert(t, x+y) end)
+    assert(#t==5 and t[1]==7 and t[5]==15)
+end
+
 -- SINKS
 
 s = S.fr_range(1, 5)
