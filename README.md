@@ -54,7 +54,6 @@ terminates.
     - `from(v)`:        calls the appropriate `fr_*` for `v`
 
 - Combinators
-    - `concat(s1,s2)`:  all values of `s1`, then all values of `s2`
     - `distinct(s)`:    removes duplicate values of `s`
     - `loop(fs)`:       repeats the stream `s=fs()` indefinitely
     - `filter(s,f)`:    filters `s` based on `f`

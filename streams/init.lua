@@ -116,28 +116,6 @@ end
 -- COMBINATORS
 -------------------------------------------------------------------------------
 
-local function concat (t)
-    local x = t.cur()
-    if x==nil and t.cur==t.s1 then
-        t.cur = t.s2
-        return t.cur()
-    else
-        return x
-    end
-end
-
-function M.concat (s1, s2)
-    local t = {
-        s1  = s1,
-        s2  = s2,
-        cur = s1,
-        f   = concat,
-    }
-    return setmetatable(t, M.mt)
-end
-
--------------------------------------------------------------------------------
-
 local function distinct (t)
     local v = t.s()
     while true do
