@@ -57,11 +57,11 @@ terminates.
     - `distinct(s)`:    removes duplicate values of `s`
     - `loop(fs)`:       repeats the stream `s=fs()` indefinitely
     - `filter(s,f)`:    filters `s` based on `f`
-    - `flatten(ss)`:    flattens a stream of streams `ss` into a single stream
     - `map(s,f)`:       applies `f` to each value of `s`
     - `skip(s,n)`:      skips the first `n` values of `s`
     - `take(s,n)`:      takes the first `n` values of `s`
     - `tap(s,f)`:       applies `f` to each value of `s`
+    - `xseq(ss)`:       flattens a stream of streams `ss` into a single stream
 
 - Sinks
     - `to(s)`:              consumes and discards all values of `s`: `s() ; s() ; ...`

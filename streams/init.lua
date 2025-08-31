@@ -21,7 +21,7 @@ function M.from (v, ...)
     end
 
     if M.is(v) then
-        return M.xseq(v, ...)
+        return M.fr_streams(v, ...)
     elseif v==nil or type(v)=='number' then
         return M.fr_range(v, ...)
     elseif type(v) == 'table' then
@@ -159,29 +159,6 @@ end
 
 -------------------------------------------------------------------------------
 
-local function flatten (t)
-    local x = t.cur()
-    while x == nil do
-        t.cur = t.src()
-        if t.cur == nil then
-            return nil
-        end
-        x = t.cur()
-    end
-    return x
-end
-
-function M.flatten (ss)
-    local t = {
-        src = ss,
-        cur = ss(),
-        f = flatten,
-    }
-    return setmetatable(t, M.mt)
-end
-
--------------------------------------------------------------------------------
-
 local function loop (t)
     local v = t.s()
     if v == nil then
@@ -286,6 +263,28 @@ function M.zip (s1, s2)
     return setmetatable(t, M.mt)
 end
 
+-------------------------------------------------------------------------------
+
+local function xseq (t)
+    local x = t.cur()
+    while x == nil do
+        t.cur = t.src()
+        if t.cur == nil then
+            return nil
+        end
+        x = t.cur()
+    end
+    return x
+end
+
+function M.xseq (ss)
+    local t = {
+        src = ss,
+        cur = ss(),
+        f = xseq,
+    }
+    return setmetatable(t, M.mt)
+end
 
 -------------------------------------------------------------------------------
 -- SINKS
