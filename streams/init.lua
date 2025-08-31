@@ -6,19 +6,28 @@ M.mt = {
     __index = M,
 }
 
+function M.is (s)
+    return (getmetatable(s) == M.mt)
+end
+
 -------------------------------------------------------------------------------
 -- SOURCES
 -------------------------------------------------------------------------------
 
 function M.from (v, ...)
-    if type(v) == 'function' then
-        return v
-    elseif ... ~= nil then
-        return M.fr_range(v, ...)
+    local multi = (select('#',...) > 0)
+    if multi then
+        assert(type(v)=='number' or M.is(v))
+    end
+
+    if M.is(v) then
+        return M.xseq(v, ...)
     elseif v==nil or type(v)=='number' then
-        return M.fr_counter(v)
+        return M.fr_range(v, ...)
     elseif type(v) == 'table' then
         return M.fr_table(v)
+    elseif type(v) == 'function' then
+        return M.fr_function(v)
     elseif type(v) == 'coroutine' then
         return M.fr_coroutine(v)
     else
