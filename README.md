@@ -46,12 +46,13 @@ terminates.
 [lua-for]: https://www.lua.org/manual/5.4/manual.html#3.3.5
 
 - Sources
-    - `fr_consts(v)`:   stream of constants `v`
-    - `fr_counter(a)`:  stream of numbers from `a` to infinity
-    - `fr_function(f)`: stream of `f()` results
-    - `fr_range(a,b)`:  stream of numbers from `a` to `b`
-    - `fr_table(t)`:    stream of values from `t`
-    - `from(v)`:        calls the appropriate `fr_*` for `v`
+    - `fr_consts(v)`:       stream of constants `v`
+    - `fr_counter(a)`:      stream of numbers from `a` to infinity
+    - `fr_function(f)`:     stream of `f()` results
+    - `fr_range(a,b)`:      stream of numbers from `a` to `b`
+    - `fr_streams(...)`:    TODO
+    - `fr_table(t)`:        stream of values from `t`
+    - `from(v)`:            calls the appropriate `fr_*` for `v`
 
 - Combinators
     - `distinct(s)`:    removes duplicate values of `s`

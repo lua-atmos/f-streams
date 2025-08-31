@@ -41,6 +41,19 @@ s = S.fr_coroutine(co)
 vs = S.to_table(s)
 assert(#vs==3 and vs[1]==1 and vs[2]==2 and vs[3]==3)
 
+-- STREAMS
+do
+    local s1 = S.fr_range(1, 3)
+    local s2 = S.fr_range(4, 6)
+    local s3 = S.fr_range(7, 9)
+    local streams = S.from(s1, s2, s3)
+    local vs = {}
+    streams:to_each(function (s)
+        s:to_each(function (v) vs[#vs+1]=v end)
+    end)
+    assert(#vs==9 and vs[1]==1 and vs[5]==5 and vs[9]==9)
+end
+
 print "--- COMBINATORS ---"
 
 print("Testing...", "map 1")
@@ -73,23 +86,23 @@ s = S.distinct(s)
 values = S.to_table(s)
 assert(#values==3 and values[1]==1 and values[2]==3 and values[3]==2)
 
-print "--- CONCAT ---"
+print "--- XSEQ ---"
 do
-    print("Testing...", "concat 1")
+    print("Testing...", "xseq 1")
     local s1 = S.from({1, 2, 3})
     local s2 = S.from({4, 5, 6})
-    local s_concat = S.concat(s1, s2)
-    local t = S.to_table(s_concat)
+    local s_xseq = S.from(s1,s2):xseq()
+    local t = S.to_table(s_xseq)
     assert(#t == 6)
     for i=1, 6 do
         assert(t[i] == i)
     end
 
-    print("Testing...", "concat 2")
+    print("Testing...", "xseq 2")
     local s1 = S.from({})
     local s2 = S.from({1, 2, 3})
-    local s_concat = S.concat(s1, s2)
-    local t = S.to_table(s_concat)
+    local s_xseq = S.from(s1, s2):xseq()
+    local t = S.to_table(s_xseq)
     assert(#t == 3)
     for i = 1, 3 do
         assert(t[i] == i)
@@ -140,7 +153,7 @@ local s1 = S.from(co1)
 local sA = S.from(coA)
 
 --[[
-local s = S.concat(s1,sA)
+local s = S.xseq(s1,sA)
 vs = S.to_table(s)
 assert(#vs==3 and vs[1]==1 and vs[2]==2 and vs[3]==3)
 ]]

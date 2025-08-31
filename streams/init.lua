@@ -95,6 +95,20 @@ end
 
 -------------------------------------------------------------------------------
 
+local function fr_streams (t)
+    return table.remove(t.ss, 1)
+end
+
+function M.fr_streams (...)
+    local t = {
+        ss = {...},
+        f = fr_streams,
+    }
+    return setmetatable(t, M.mt)
+end
+
+-------------------------------------------------------------------------------
+
 local function fr_table (t)
     if t.i <= #t.t then
         local v = t.t[t.i]
