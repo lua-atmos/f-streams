@@ -215,10 +215,10 @@ end
 -------------------------------------------------------------------------------
 
 local function tap (t)
-    local v = t.s()
-    if v ~= nil then
-        t.p(v)
-        return v
+    local vs = { t.s() }
+    if #vs > 0 then
+        t.p(table.unpack(vs))
+        return table.unpack(vs)
     end
 end
 
