@@ -188,7 +188,7 @@ do
     local s2 = S.from(6, 10)
     local zipped = S.zip(s1, s2)
     local t = {}
-    zipped:to_each(function(x,y) table.insert(t, x+y) end)
+    zipped:to_each(function(xy) table.insert(t, xy[1]+xy[2]) end)
     assert(#t==5 and t[1]==7 and t[5]==15)
 end
 

@@ -178,9 +178,9 @@ end
 -------------------------------------------------------------------------------
 
 local function map (t)
-    local v = {t.s()}
-    if #v > 0 then
-        return t.p(table.unpack(v))
+    local v = t.s()
+    if v ~= nil then
+        return t.p(v)
     end
 end
 
@@ -215,10 +215,10 @@ end
 -------------------------------------------------------------------------------
 
 local function tap (t)
-    local vs = { t.s() }
-    if #vs > 0 then
-        t.p(table.unpack(vs))
-        return table.unpack(vs)
+    local v = t.s()
+    if v ~= nil then
+        t.p(v)
+        return v
     end
 end
 
@@ -246,7 +246,7 @@ local function zip (t)
     local v1 = t.s1()
     local v2 = t.s2()
     if v1~=nil and v2~=nil then
-        return v1, v2
+        return {v1, v2}
     else
         return nil
     end
@@ -298,10 +298,10 @@ end
 
 function M.to_acc (s, acc, f)
     local s <close> = s
-    local v = {s()}
-    while #v > 0 do
-        acc = f(acc, table.unpack(v))
-        v = {s()}
+    local v = s()
+    while v ~= nil do
+        acc = f(acc, v)
+        v = s()
     end
     return acc
 end
