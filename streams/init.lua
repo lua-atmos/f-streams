@@ -134,6 +134,14 @@ end
 
 -------------------------------------------------------------------------------
 
+function M.map (s, f)
+    return M.acc(s, nil, function(_,x) return f(x) end)
+end
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
 local function distinct (t)
     local v = t.s()
     while true do
@@ -191,24 +199,6 @@ function M.loop (fs)
         fs = fs,
         s  = fs(),
         f  = loop,
-    }
-    return setmetatable(t, M.mt)
-end
-
--------------------------------------------------------------------------------
-
-local function map (t)
-    local v = t.s()
-    if v ~= nil then
-        return t.p(v)
-    end
-end
-
-function M.map (s, f)
-    local t = {
-        s = s,
-        p = f,
-        f = map,
     }
     return setmetatable(t, M.mt)
 end

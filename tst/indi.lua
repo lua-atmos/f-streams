@@ -2,47 +2,57 @@ local S = require("streams")
 
 print "--- SOURCES ---"
 
-print("Testing...", "consts 1")
-local s = S.fr_consts(42)
-assert(s() == 42)
-assert(s() == 42)
-assert(s() == 42)
-
-print("Testing...", "range 1")
-local s = S.fr_range(1, 5)
-local values = S.to_table(s)
-assert(#values == 5 and values[1] == 1 and values[5] == 5)
-
-print("Testing...", "table 1")
-s = S.fr_table({1, 2, 3, 4, 5})
-values = S.to_table(s)
-assert(#values == 5 and values[1] == 1 and values[5] == 5)
-
-print("Testing...", "__call 1")
-local value = {}
-setmetatable(value, {
-    __call = function()
-        return 5
-    end
-})
-local s = value
-local result = s()
-assert(result == 5)
-local result = s()
-assert(result == 5)
-
-print("Testing...", "coro 1")
-local co = coroutine.create(function ()
-    coroutine.yield(1)
-    coroutine.yield(2)
-    coroutine.yield(3)
-end)
-s = S.fr_coroutine(co)
-vs = S.to_table(s)
-assert(#vs==3 and vs[1]==1 and vs[2]==2 and vs[3]==3)
-
--- STREAMS
 do
+    print("Testing...", "consts 1")
+    local s = S.fr_consts(42)
+    assert(s() == 42)
+    assert(s() == 42)
+    assert(s() == 42)
+end
+
+do
+    print("Testing...", "range 1")
+    local s = S.fr_range(1, 5)
+    local values = S.to_table(s)
+    assert(#values == 5 and values[1] == 1 and values[5] == 5)
+end
+
+do
+    print("Testing...", "table 1")
+    s = S.fr_table({1, 2, 3, 4, 5})
+    values = S.to_table(s)
+    assert(#values == 5 and values[1] == 1 and values[5] == 5)
+end
+
+do
+    print("Testing...", "__call 1")
+    local value = {}
+    setmetatable(value, {
+        __call = function()
+            return 5
+        end
+    })
+    local s = value
+    local result = s()
+    assert(result == 5)
+    local result = s()
+    assert(result == 5)
+end
+
+do
+    print("Testing...", "coro 1")
+    local co = coroutine.create(function ()
+        coroutine.yield(1)
+        coroutine.yield(2)
+        coroutine.yield(3)
+    end)
+    s = S.fr_coroutine(co)
+    vs = S.to_table(s)
+    assert(#vs==3 and vs[1]==1 and vs[2]==2 and vs[3]==3)
+end
+
+do
+    print("Testing...", "streams 1")
     local s1 = S.fr_range(1, 3)
     local s2 = S.fr_range(4, 6)
     local s3 = S.fr_range(7, 9)
@@ -56,7 +66,7 @@ end
 
 print "--- COMBINATORS ---"
 
--- ACC
+print "- ACC -"
 do
     print("Testing...", "acc 1: +")
     local s = S.from {1, 2, 3}
