@@ -56,6 +56,40 @@ end
 
 print "--- COMBINATORS ---"
 
+-- ACC
+do
+    print("Testing...", "acc 1: +")
+    local s = S.from {1, 2, 3}
+    s = s:acc(0, function(a, b) return a + b end)
+    local vs = s:to_table()
+print(#vs)
+    assert(#vs==3 and vs[1]==1 and vs[2]==3 and vs[3]==6)
+
+    print("Testing...", "acc 2: *")
+    local s = S.from {1, 2, 3}
+    s = s:acc(1, function(a, b) return a * b end)
+    local vs = s:to_table()
+    assert(#vs==3 and vs[1]==1 and vs[2]==2 and vs[3]==6)
+
+    print("Testing...", "acc 3: {}")
+    local s = S.from {}
+    s = s:acc(1, function(a, b) return a + b end)
+    local vs = s:to_table()
+    assert(#vs==0)
+
+    print("Testing...", "acc 4: {1}")
+    local s = S.from {5}
+    s = s:acc(0, function(a, b) return a + b end)
+    local vs = s:to_table()
+    assert(#vs==1 and vs[1]==5)
+
+    print("Testing...", "acc 5: id")
+    local s = S.from {1,2,3}
+    s = s:acc(0, function(a, b) return a end)
+    local vs = s:to_table()
+    assert(#vs==3 and vs[1]==0 and vs[2]==0 and vs[3]==0)
+end
+
 print("Testing...", "map 1")
 s = S.fr_range(1, 5)
 s = S.map(s, function(x) return x * 2 end)

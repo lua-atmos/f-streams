@@ -114,6 +114,26 @@ end
 -- COMBINATORS
 -------------------------------------------------------------------------------
 
+local function acc (t)
+    local v = t.s()
+    if v ~= nil then
+        t.cur = t.g(t.cur, v)
+        return t.cur
+    end
+end
+
+function M.acc (s, z, g)
+    local t = {
+        s   = s,
+        g   = g,
+        cur = z,
+        f   = acc,
+    }
+    return setmetatable(t, M.mt)
+end
+
+-------------------------------------------------------------------------------
+
 local function distinct (t)
     local v = t.s()
     while true do
