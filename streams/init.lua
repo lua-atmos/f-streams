@@ -135,7 +135,24 @@ end
 -------------------------------------------------------------------------------
 
 function M.map (s, f)
-    return M.acc(s, nil, function(_,x) return f(x) end)
+    return M.acc(s, nil, function (_, x) return f(x) end)
+end
+
+function M.take (s, n)
+    local i = 0
+    return M.acc(s, nil, function (_, x)
+        i = i + 1
+        if i <= n then
+            return x
+        end
+    end)
+end
+
+function M.tap (s, f)
+    return M.acc(s, nil, function (_, x)
+        f(x)
+        return x
+    end)
 end
 
 -------------------------------------------------------------------------------
@@ -199,44 +216,6 @@ function M.loop (fs)
         fs = fs,
         s  = fs(),
         f  = loop,
-    }
-    return setmetatable(t, M.mt)
-end
-
--------------------------------------------------------------------------------
-
-local function take (t)
-    if t.cur < t.max then
-        t.cur = t.cur + 1
-        return t.s()
-    end
-end
-
-function M.take (s, n)
-    local t = {
-        s   = s,
-        max = n,
-        cur = 0,
-        f   = take,
-    }
-    return setmetatable(t, M.mt)
-end
-
--------------------------------------------------------------------------------
-
-local function tap (t)
-    local v = t.s()
-    if v ~= nil then
-        t.p(v)
-        return v
-    end
-end
-
-function M.tap (s, f)
-    local t = {
-        s = s,
-        p = f,
-        f = tap,
     }
     return setmetatable(t, M.mt)
 end
