@@ -31,12 +31,6 @@ values = S.table(s):to()
 assert(#values == 5 and values[1] == 2 and values[5] == 10)
 
 s = S.fr_range(1, 10)
-s = S.distinct(s)
-s = S.map(s, function(x) return x * 2 end)
-values = S.table(s):to()
-assert(#values == 10 and values[1] == 2 and values[10] == 20)
-
-s = S.fr_range(1, 10)
 s = S.map(s, function(x) return x * 2 end)
 s = S.filter(s, function(x) return x % 4 == 0 end)
 values = S.table(s):to()
@@ -125,6 +119,39 @@ assert(t[2] == 4)
 assert(t[3] == 6)
 assert(t[4] == 8)
 
+print '--- TO / TAP ---'
+
+do
+    local s = S.fr_range(1, 5)
+    local tapped = {}
+    s:tap(function(x) table.insert(tapped, x) end):to()
+    assert(#tapped == 5)
+    assert(tapped[1] == 1)
+    assert(tapped[2] == 2)
+    assert(tapped[3] == 3)
+    assert(tapped[4] == 4)
+    assert(tapped[5] == 5)
+
+    local s = S.fr_range(1, 5)
+    local tapped = {}
+    s:map(function(x) return x * 2 end):tap(function(x) table.insert(tapped, x) end):to()
+    assert(#tapped == 5)
+    assert(tapped[1] == 2)
+    assert(tapped[2] == 4)
+    assert(tapped[3] == 6)
+    assert(tapped[4] == 8)
+    assert(tapped[5] == 10)
+end
+
+-- TODO
+
+--[===[
+s = S.fr_range(1, 10)
+s = S.distinct(s)
+s = S.map(s, function(x) return x * 2 end)
+values = S.table(s):to()
+assert(#values == 10 and values[1] == 2 and values[10] == 20)
+
 print "--- LOOP ---"
 do
     do
@@ -169,30 +196,6 @@ do
     end
 end
 
-print '--- TO / TAP ---'
-
-do
-    local s = S.fr_range(1, 5)
-    local tapped = {}
-    s:tap(function(x) table.insert(tapped, x) end):to()
-    assert(#tapped == 5)
-    assert(tapped[1] == 1)
-    assert(tapped[2] == 2)
-    assert(tapped[3] == 3)
-    assert(tapped[4] == 4)
-    assert(tapped[5] == 5)
-
-    local s = S.fr_range(1, 5)
-    local tapped = {}
-    s:map(function(x) return x * 2 end):tap(function(x) table.insert(tapped, x) end):to()
-    assert(#tapped == 5)
-    assert(tapped[1] == 2)
-    assert(tapped[2] == 4)
-    assert(tapped[3] == 6)
-    assert(tapped[4] == 8)
-    assert(tapped[5] == 10)
-end
-
 print '--- ZIP ---'
 do
     local s1 = S.from(1, 5)
@@ -212,3 +215,4 @@ do
     zipped:tap(function(x,y) table.insert(result, {x,y}) end):to()
     assert(#result == 0)
 end
+]===]

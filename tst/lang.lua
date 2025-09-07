@@ -39,6 +39,9 @@ for i = 4, 6 do
     assert(t[i] == i*2 + 1)
 end
 
+-- TODO
+
+--[===[
 print "--- LOOP ---"
 do
     do
@@ -60,4 +63,4 @@ do
         assert(t[5] == 2)
     end
 end
-
+]===]

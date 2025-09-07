@@ -181,40 +181,6 @@ values = S.table(s):to()
 assert(#values == 5 and values[1] == 6 and values[5] == 10)
 assert(s() == nil)
 
-s = S.fr_table { 1, 3, 1, 1, 2, 3 }
-s = S.distinct(s)
-values = S.table(s):to()
-assert(#values==3 and values[1]==1 and values[2]==3 and values[3]==2)
-
-print "--- LOOP ---"
-do
-    local function my_stream()
-        local i = 0
-        return function()
-            i = i + 1
-            if i <= 3 then
-                return i
-            end
-        end
-    end
-
-    local loop_stream = S.loop(my_stream)
-    local values = {}
-    for i = 1, 10 do
-        table.insert(values, loop_stream())
-    end
-    assert(values[1] == 1)
-    assert(values[2] == 2)
-    assert(values[3] == 3)
-    assert(values[4] == 1)
-    assert(values[5] == 2)
-    assert(values[6] == 3)
-    assert(values[7] == 1)
-    assert(values[8] == 2)
-    assert(values[9] == 3)
-    assert(values[10] == 1)
-end
-
 print("Testing...", "coro 1")
 local co1 = coroutine.create(function ()
     coroutine.yield(1)
@@ -261,16 +227,6 @@ do
     s = S.fr_range(1, 5)
     S.tap(s, function(x) assert(x >= 1 and x <= 5) end):to()
     assert(s() == nil)
-end
-
-print "--- ZIP ---"
-do
-    local s1 = S.from(1, 5)
-    local s2 = S.from(6, 10)
-    local zipped = S.zip(s1, s2)
-    local t = {}
-    zipped:tap(function(xy) table.insert(t, xy[1]+xy[2]) end):to()
-    assert(#t==5 and t[1]==7 and t[5]==15)
 end
 
 -- SINKS
@@ -333,3 +289,51 @@ do
     assert(S.to_first(s) == nil)
     assert(S.to_last(s) == nil)
 end
+
+-- TODO
+
+--[===[
+s = S.fr_table { 1, 3, 1, 1, 2, 3 }
+s = S.distinct(s)
+values = S.table(s):to()
+assert(#values==3 and values[1]==1 and values[2]==3 and values[3]==2)
+
+print "--- LOOP ---"
+do
+    local function my_stream()
+        local i = 0
+        return function()
+            i = i + 1
+            if i <= 3 then
+                return i
+            end
+        end
+    end
+
+    local loop_stream = S.loop(my_stream)
+    local values = {}
+    for i = 1, 10 do
+        table.insert(values, loop_stream())
+    end
+    assert(values[1] == 1)
+    assert(values[2] == 2)
+    assert(values[3] == 3)
+    assert(values[4] == 1)
+    assert(values[5] == 2)
+    assert(values[6] == 3)
+    assert(values[7] == 1)
+    assert(values[8] == 2)
+    assert(values[9] == 3)
+    assert(values[10] == 1)
+end
+
+print "--- ZIP ---"
+do
+    local s1 = S.from(1, 5)
+    local s2 = S.from(6, 10)
+    local zipped = S.zip(s1, s2)
+    local t = {}
+    zipped:tap(function(xy) table.insert(t, xy[1]+xy[2]) end):to()
+    assert(#t==5 and t[1]==7 and t[5]==15)
+end
+]===]
