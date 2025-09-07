@@ -130,6 +130,7 @@ function M.empty ()
 end
 
 -------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 local function acc (t)
     local v = t.s()
@@ -152,24 +153,71 @@ end
 -------------------------------------------------------------------------------
 
 function M.map (s, f)
-    return M.acc(s, nil, function (_, x) return f(x) end)
+    return M.acc(s, nil, function (_, v) return f(v) end)
+end
+
+function M.mapi (s, f)
+    local i = 0
+    return s:map(function (x)
+        i = i + 1
+        return f(i, x)
+    end)
 end
 
 function M.take (s, n)
     local i = 0
-    return M.acc(s, nil, function (_, x)
+    return M.acc(s, nil, function (_, v)
         i = i + 1
         if i <= n then
-            return x
+            return v
         end
     end)
 end
 
 function M.tap (s, f)
-    return M.acc(s, nil, function (_, x)
-        f(x)
-        return x
+    return M.acc(s, nil, function (_, v)
+        f(v)
+        return v
     end)
+end
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+local function xseq (t)
+    if t.s == nil then
+        return nil
+    end
+    local v = t.s()
+    while v == nil do
+        t.s = t.ss()
+        if t.s == nil then
+            return nil
+        end
+        v = t.s()
+    end
+    return v
+end
+
+function M.xseq (ss)
+    local t = {
+        ss = ss,
+        s = ss(),
+        f = xseq,
+    }
+    return setmetatable(t, M.mt)
+end
+
+-------------------------------------------------------------------------------
+
+function M.skip (s, n)
+    return s:mapi(function(i, v)
+        if i > n then
+            return M.fr_const(v)
+        else
+            return M.empty()
+        end
+    end):xseq()
 end
 
 -------------------------------------------------------------------------------
@@ -239,15 +287,6 @@ end
 
 -------------------------------------------------------------------------------
 
-function M.skip (s, n)
-    for _=1, n do
-        s()
-    end
-    return s
-end
-
--------------------------------------------------------------------------------
-
 local function zip (t)
     local v1 = t.s1()
     local v2 = t.s2()
@@ -263,29 +302,6 @@ function M.zip (s1, s2)
         s1 = s1,
         s2 = s2,
         f  = zip,
-    }
-    return setmetatable(t, M.mt)
-end
-
--------------------------------------------------------------------------------
-
-local function xseq (t)
-    local x = t.cur()
-    while x == nil do
-        t.cur = t.src()
-        if t.cur == nil then
-            return nil
-        end
-        x = t.cur()
-    end
-    return x
-end
-
-function M.xseq (ss)
-    local t = {
-        src = ss,
-        cur = ss(),
-        f = xseq,
     }
     return setmetatable(t, M.mt)
 end

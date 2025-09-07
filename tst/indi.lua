@@ -113,12 +113,21 @@ print(#vs)
     assert(#vs==3 and vs[1]==0 and vs[2]==0 and vs[3]==0)
 end
 
-print("Testing...", "map 1")
-s = S.fr_range(1, 5)
-s = S.map(s, function(x) return x * 2 end)
-values = S.to_table(s)
-assert(#values == 5 and values[1] == 2 and values[5] == 10)
-assert(s() == nil)
+do
+    print("Testing...", "map 1")
+    s = S.fr_range(1, 5)
+    s = S.map(s, function(x) return x * 2 end)
+    values = S.to_table(s)
+    assert(#values == 5 and values[1] == 2 and values[5] == 10)
+    assert(s() == nil)
+
+    print("Testing...", "mapi 1")
+    local s = S.from({1, 2, 3})
+    local vs = s:mapi(function(x, i)
+        return x * i
+    end):to_table()
+    assert(#vs==3 and vs[1]==1 and vs[2]==4 and vs[3]==9)
+end
 
 print("Testing...", "filter 1")
 s = S.fr_range(1, 5)
@@ -132,25 +141,18 @@ s = S.take(s, 5)
 values = S.to_table(s)
 assert(#values == 5 and values[1] == 1 and values[5] == 5)
 
-print("Testing...", "skip 1")
-s = S.fr_range(1, 10)
-s = S.skip(s, 5)
-values = S.to_table(s)
-assert(#values == 5 and values[1] == 6 and values[5] == 10)
-assert(s() == nil)
-
-s = S.fr_table { 1, 3, 1, 1, 2, 3 }
-s = S.distinct(s)
-values = S.to_table(s)
-assert(#values==3 and values[1]==1 and values[2]==3 and values[3]==2)
-
 print "--- XSEQ ---"
 do
+    print("Testing...", "xseq 0")
+    local s = S.empty():xseq()
+    assert(s() == nil)
+
     print("Testing...", "xseq 1")
     local s1 = S.from({1, 2, 3})
     local s2 = S.from({4, 5, 6})
     local s_xseq = S.from{s1,s2}:xseq()
     local t = S.to_table(s_xseq)
+print(#t)
     assert(#t == 6)
     for i=1, 6 do
         assert(t[i] == i)
@@ -166,6 +168,18 @@ do
         assert(t[i] == i)
     end
 end
+
+print("Testing...", "skip 1")
+s = S.fr_range(1, 10)
+s = S.skip(s, 5)
+values = S.to_table(s)
+assert(#values == 5 and values[1] == 6 and values[5] == 10)
+assert(s() == nil)
+
+s = S.fr_table { 1, 3, 1, 1, 2, 3 }
+s = S.distinct(s)
+values = S.to_table(s)
+assert(#values==3 and values[1]==1 and values[2]==3 and values[3]==2)
 
 print "--- LOOP ---"
 do
