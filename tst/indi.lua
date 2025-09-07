@@ -295,6 +295,26 @@ assert(s() == nil)
 s = S.from(10)
 assert(S.to_first(s) == 10)
 
+print "-  ANY / ALL / NONE / SOME -"
+do
+    -- Testes para to_any
+    assert(S.from({1, 2, 3}):to_any(function(x) return x > 2 end) == true)
+    assert(S.from({1, 2, 3}):to_any(function(x) return x > 3 end) == false)
+
+    -- Testes para to_all
+    assert(S.from({1, 2, 3}):to_all(function(x) return x > 0 end) == true)
+    assert(S.from({1, 2, 3}):to_all(function(x) return x > 1 end) == false)
+
+    -- Testes para to_none
+    assert(S.from({1, 2, 3}):to_none(function(x) return x > 3 end) == true)
+    assert(S.from({1, 2, 3}):to_none(function(x) return x > 2 end) == false)
+
+    -- Testes para to_some
+    assert(S.from({1, 2, 3, 4}):to_some(function(x) return x > 2 end) == true)
+    assert(S.from({1, 2, 3}):to_some(function(x) return x > 3 end) == false)
+    assert(S.from({1, 2, 3}):to_some(function(x) return x == 2 end) == false)
+end
+
 print '--- TO ---'
 
 local s = S.fr_range(1, 5)

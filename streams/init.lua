@@ -252,6 +252,24 @@ end
 M.to = M.to_last
 
 -------------------------------------------------------------------------------
+
+function M.to_any (s, f)
+    return (s:filter(f):to_first() ~= nil)
+end
+
+function M.to_some (s, f)
+    return (s:filter(f):skip(1):to_first() ~= nil)
+end
+
+function M.to_all (s, f)
+    return not (s:to_any(function(x) return not f(x) end))
+end
+
+function M.to_none (s, p)
+    return not s:to_any(p)
+end
+
+-------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
 
