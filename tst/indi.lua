@@ -8,6 +8,12 @@ do
     assert(s() == 42)
     assert(s() == 42)
     assert(s() == 42)
+
+    print("Testing...", "const 1")
+    local s = S.fr_const(42)
+    assert(s() == 42)
+    assert(s() == nil)
+    assert(s() == nil)
 end
 
 do
@@ -66,6 +72,13 @@ end
 
 print "--- COMBINATORS ---"
 
+do
+    print("Testing...", "empty 1")
+    local s = S.empty()
+    assert(s() == nil)
+    assert(s() == nil)
+end
+
 print "- ACC -"
 do
     print("Testing...", "acc 1: +")
@@ -119,6 +132,7 @@ s = S.take(s, 5)
 values = S.to_table(s)
 assert(#values == 5 and values[1] == 1 and values[5] == 5)
 
+print("Testing...", "skip 1")
 s = S.fr_range(1, 10)
 s = S.skip(s, 5)
 values = S.to_table(s)

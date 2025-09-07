@@ -47,6 +47,10 @@ function M.fr_consts (v)
     return setmetatable(t, M.mt)
 end
 
+function M.fr_const (v)
+    return M.fr_consts(v):take(1)
+end
+
 -------------------------------------------------------------------------------
 
 local function fr_coroutine (t)
@@ -112,6 +116,19 @@ end
 
 -------------------------------------------------------------------------------
 -- COMBINATORS
+-------------------------------------------------------------------------------
+
+local function empty (t)
+    return nil
+end
+
+function M.empty ()
+    local t = {
+        f = empty,
+    }
+    return setmetatable(t, M.mt)
+end
+
 -------------------------------------------------------------------------------
 
 local function acc (t)
