@@ -19,14 +19,14 @@ end
 do
     print("Testing...", "range 1")
     local s = S.fr_range(1, 5)
-    local values = S.to_table(s)
+    local values = S.table(s):to()
     assert(#values == 5 and values[1] == 1 and values[5] == 5)
 end
 
 do
     print("Testing...", "table 1")
     s = S.fr_table({1, 2, 3, 4, 5})
-    values = S.to_table(s)
+    values = S.table(s):to()
     assert(#values == 5 and values[1] == 1 and values[5] == 5)
 end
 
@@ -53,7 +53,7 @@ do
         coroutine.yield(3)
     end)
     s = S.fr_coroutine(co)
-    vs = S.to_table(s)
+    vs = S.table(s):to()
     assert(#vs==3 and vs[1]==1 and vs[2]==2 and vs[3]==3)
 end
 
@@ -84,32 +84,33 @@ do
     print("Testing...", "acc 1: +")
     local s = S.from {1, 2, 3}
     s = s:acc(0, function(a, b) return a + b end)
-    local vs = s:to_table()
+    local vs = s:table():to()
 print(#vs)
     assert(#vs==3 and vs[1]==1 and vs[2]==3 and vs[3]==6)
 
     print("Testing...", "acc 2: *")
     local s = S.from {1, 2, 3}
     s = s:acc(1, function(a, b) return a * b end)
-    local vs = s:to_table()
+    local vs = s:table():to()
     assert(#vs==3 and vs[1]==1 and vs[2]==2 and vs[3]==6)
 
     print("Testing...", "acc 3: {}")
     local s = S.from {}
     s = s:acc(1, function(a, b) return a + b end)
-    local vs = s:to_table()
-    assert(#vs==0)
+    local vs = s:table():to()
+    --assert(#vs==0)
+    assert(vs==nil)
 
     print("Testing...", "acc 4: {1}")
     local s = S.from {5}
     s = s:acc(0, function(a, b) return a + b end)
-    local vs = s:to_table()
+    local vs = s:table():to()
     assert(#vs==1 and vs[1]==5)
 
     print("Testing...", "acc 5: id")
     local s = S.from {1,2,3}
     s = s:acc(0, function(a, b) return a end)
-    local vs = s:to_table()
+    local vs = s:table():to()
     assert(#vs==3 and vs[1]==0 and vs[2]==0 and vs[3]==0)
 
     s = S.fr_range(1, 5)
@@ -121,7 +122,7 @@ do
     print("Testing...", "map 1")
     s = S.fr_range(1, 5)
     s = S.map(s, function(x) return x * 2 end)
-    values = S.to_table(s)
+    values = S.table(s):to()
     assert(#values == 5 and values[1] == 2 and values[5] == 10)
     assert(s() == nil)
 
@@ -129,20 +130,20 @@ do
     local s = S.from({1, 2, 3})
     local vs = s:mapi(function(x, i)
         return x * i
-    end):to_table()
+    end):table():to()
     assert(#vs==3 and vs[1]==1 and vs[2]==4 and vs[3]==9)
 end
 
 print("Testing...", "filter 1")
 s = S.fr_range(1, 5)
 s = S.filter(s, function(x) return x % 2 == 0 end)
-values = S.to_table(s)
+values = S.table(s):to()
 assert(#values == 2 and values[1] == 2 and values[2] == 4)
 
 print("Testing...", "take 1")
 s = S.fr_range(1, 10)
 s = S.take(s, 5)
-values = S.to_table(s)
+values = S.table(s):to()
 assert(#values == 5 and values[1] == 1 and values[5] == 5)
 
 print "--- XSEQ ---"
@@ -155,7 +156,7 @@ do
     local s1 = S.from({1, 2, 3})
     local s2 = S.from({4, 5, 6})
     local s_xseq = S.from{s1,s2}:xseq()
-    local t = S.to_table(s_xseq)
+    local t = S.table(s_xseq):to()
 print(#t)
     assert(#t == 6)
     for i=1, 6 do
@@ -166,7 +167,7 @@ print(#t)
     local s1 = S.from({})
     local s2 = S.from({1, 2, 3})
     local s_xseq = S.from{s1, s2}:xseq()
-    local t = S.to_table(s_xseq)
+    local t = S.table(s_xseq):to()
     assert(#t == 3)
     for i = 1, 3 do
         assert(t[i] == i)
@@ -176,13 +177,13 @@ end
 print("Testing...", "skip 1")
 s = S.fr_range(1, 10)
 s = S.skip(s, 5)
-values = S.to_table(s)
+values = S.table(s):to()
 assert(#values == 5 and values[1] == 6 and values[5] == 10)
 assert(s() == nil)
 
 s = S.fr_table { 1, 3, 1, 1, 2, 3 }
 s = S.distinct(s)
-values = S.to_table(s)
+values = S.table(s):to()
 assert(#values==3 and values[1]==1 and values[2]==3 and values[3]==2)
 
 print "--- LOOP ---"
@@ -230,7 +231,7 @@ local sA = S.from(coA)
 
 --[[
 local s = S.xseq(s1,sA)
-vs = S.to_table(s)
+vs = S.table(s):to()
 assert(#vs==3 and vs[1]==1 and vs[2]==2 and vs[3]==3)
 ]]
 

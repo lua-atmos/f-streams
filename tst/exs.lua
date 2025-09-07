@@ -5,7 +5,7 @@ do
     print("Testing...", "counter 1")
     local my_counter = S.fr_counter()
     local my_capped_counter = S.take(my_counter, 5)
-    local my_array = S.to_table(my_capped_counter)
+    local my_array = S.table(my_capped_counter):to()
     out(type(my_array))
     for i,v in ipairs(my_array) do
         out(i,v)
@@ -31,7 +31,7 @@ do
       "Dennis"
     }
     local names_with_b = S.filter(S.from(names), function(it) return it:find("[Bb]") end)
-    local v = S.to_table(names_with_b)
+    local v = S.table(names_with_b):to()
     assert(#v == 2)
     assert(v[1] == "Beatrice")
     assert(v[2] == "Caleb")
@@ -46,7 +46,7 @@ do
       "Dennis"
     }
     local names_with_b = S.filter(S.fr_table(names), function(it) return it:find("[Bb]") end)
-    local v = S.to_table(S.map(names_with_b, string.upper))
+    local v = S.table(S.map(names_with_b, string.upper)):to()
     assert(#v == 2)
     assert(v[1] == "BEATRICE")
     assert(v[2] == "CALEB")
@@ -67,14 +67,14 @@ do
     local fix_case = function (name)
         return name:sub(1,1):upper() .. name:sub(2):lower()
     end
-    local t = S.to_table(S.map(S.fr_table(names), fix_case))
+    local t = S.table(S.map(S.fr_table(names), fix_case)):to()
     assert(#t==4 and t[1]=="Hellen" and t[4]=="Patroclus")
 end
 
 do
     print("Testing...", "acc 1")
     local numbers = S.fr_range(10,15)
-    local sum = S.to_acc(numbers, 0, function(acc,new) return acc+new end)
+    local sum = S.acc(numbers, 0, function(acc,new) return acc+new end):to()
     assert(sum == 75)
 end
 
@@ -83,9 +83,9 @@ do
     local numbers = {2, 1, 3, 4, 7, 11, 18, 29}
 
     local is_even = function (it) return (it % 2) == 0 end
-    local vs1 = S.to_table(S.filter(S.from(numbers), is_even))
+    local vs1 = S.table(S.filter(S.from(numbers), is_even)):to()
 
-    local vs2 = S.to_table(S.filter(S.fr_table(numbers), function (it) return (it % 2) == 0 end))
+    local vs2 = S.table(S.filter(S.fr_table(numbers), function (it) return (it % 2) == 0 end)):to()
     assert(#vs1==3 and #vs2==3 and vs1[1]==2 and vs2[2]==4 and vs1[3]==18)
 end
 
@@ -99,6 +99,6 @@ do
     -- map will iterate through each row, and the lambda
     -- indexes each to retrieve the first element
     local v = S.map(S.from(matrix), function(it) return it[1] end)
-    v = S.to_table(v)
+    v = S.table(v):to()
     assert(#v==3 and v[1]==1 and v[2]==4 and v[3]==7)
 end

@@ -130,7 +130,6 @@ function M.empty ()
 end
 
 -------------------------------------------------------------------------------
--------------------------------------------------------------------------------
 
 local function acc (t)
     local v = t.s()
@@ -164,6 +163,10 @@ function M.mapi (s, f)
     end)
 end
 
+function M.table (s)
+    return M.acc(s, {}, function(a,v) a[#a+1]=v ; return a end)
+end
+
 function M.take (s, n)
     local i = 0
     return M.acc(s, nil, function (_, v)
@@ -185,15 +188,12 @@ do
     function M.max (s)
         return M.acc(s, -math.huge, function(a,x) return math.max(a,x) end)
     end
-
     function M.min (s)
         return M.acc(s, math.huge, function(a,x) return math.min(a,x) end)
     end
-
     function M.mul (s)
         return M.acc(s, 1, function(a,x) return a*x end)
     end
-
     function M.sum (s)
         return M.acc(s, 0, function(a,x) return a+x end)
     end
@@ -271,6 +271,10 @@ M.to = M.to_last
 
 function M.to_first (s)
     return s()
+end
+
+function M.to_print (s)
+    return s:tap(print):to()
 end
 
 -------------------------------------------------------------------------------
@@ -362,28 +366,6 @@ end
 
     function M.to_vector (s)
         return M.to_table(s)
-    end
-
--------------------------------------------------------------------------------
--- SINKS
--------------------------------------------------------------------------------
-
-function M.to_acc (s, acc, f)
-    local s <close> = s
-    local v = s()
-    while v ~= nil do
-        acc = f(acc, v)
-        v = s()
-    end
-    return acc
-end
-
-    function M.to_print (s)
-        return s:to_each(function (...) print(...) end)
-    end
-
-    function M.to_table (s)
-        return M.to_acc(s, {}, function(a,x) a[#a+1]=x ; return a end)
     end
 
 return M
