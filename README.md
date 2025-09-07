@@ -46,7 +46,9 @@ terminates.
 [lua-for]: https://www.lua.org/manual/5.4/manual.html#3.3.5
 
 - Sources
-    - `fr_consts(v)`:       stream of constants `v`
+    - `fr_const(v)`:        stream of constants `v`
+    - `fr_consts(v)`:       stream of a single constant `v`
+    - `fr_coroutine(co)`:   stream of values from coroutine `co`
     - `fr_counter(a)`:      stream of numbers from `a` to infinity
     - `fr_function(f)`:     stream of `f()` results
     - `fr_range(a,b)`:      stream of numbers from `a` to `b`
@@ -54,30 +56,42 @@ terminates.
     - `from(v)`:            calls the appropriate `fr_*` for `v`
 
 - Combinators
-    - `distinct(s)`:    removes duplicate values of `s`
-    - `loop(fs)`:       repeats the stream `s=fs()` indefinitely
+    - `acc(s,z,f)`:     accumulates each value of `s` based on `f`:
+                        `v1=f(z,s()), v2=f(v1,s()), ...`
+    - `empty()`:        an empty stream
     - `filter(s,f)`:    filters `s` based on `f`
-    - `map(s,f)`:       applies `f` to each value of `s`
+    - `map(s,f)`:       applies `f` to each value of `s`:
+                        `f(s()), f(s()), ...`
+    - `mapi(s,f)`:      applies `f` to each indexed value of `s`
+                        `f(1,s()), f(2,s()), ...`
+    - `max(s)`:         maximum between each value of `s`
+    - `min(s)`:         minimum between each value of `s`
+    - `mul(s)`:         multiplies each value of `s`
     - `skip(s,n)`:      skips the first `n` values of `s`
+    - `sum(s)`:         sums each value of `s`
+    - `table(s)`:       appends each value of `s` to a table:
+                        `{s()}, {s(),s()}, ...`
     - `take(s,n)`:      takes the first `n` values of `s`
     - `tap(s,f)`:       applies `f` to each value of `s`
-    - `xseq(ss)`:       TODO: flattens a stream of streams `ss` into a single stream
+    - `xseq(ss)`:       flattens a stream of streams `ss` into a single stream
 
 - Sinks
-    - `to(s)`:              consumes and discards all values of `s`: `s() ; s() ; ...`
-    - `to_first(s)`:        first value of `s`: `s()`
-    - `to_table(s)`:        appends all values of `s` to a table: `{ s(), s(), ... }`
-    - `to_each(s,f)`:       applies all values of `s` with `f`: `f(s()) ; f(s()) ; ...`
-    - `to_acc(s,acc,f)`:    accumulates all values of `s` based on `f`: `f(...f(f(z,s()),s())...)`
-        - `to_sum(s)`:      sums all values of `s`: `s() + s() + ...`
-        - `to_mul(s)`:      multiplies all values of `s`: `s() * s() * ...`
-        - `to_min(s)`:      minimum value of `s`: `min(...min(s(),s())...)`
-        - `to_max(s)`:      maximum value of `s`: `max(...max(s(),s())...)`
+    - `to(s)`:          same as `to_last(s)`
+    - `to_all(s,f)`:    if all values of `s` conform with `f`
+    - `to_any(s,f)`:    if any value of `s` conforms with `f`
+    - `to_first(s)`:    first value of `s`
+    - `to_last(s)`:     last value of `s`
+    - `to_none(s,f)`:   if no values of `s` conform with `f`
+    - `to_print(s)`:    prints all values of `s`
+    - `to_some(s,f)`:   if multiple values of `s` conform with `f`
 
 <!--
 - Sources
     - S.fr_vector
 - Combinators
+    - tapi
+    - `distinct(s)`:    removes duplicate values of `s`
+    - `loop(fs)`:       repeats the stream `s=fs()` indefinitely
     - `zip(...)`: combines two streams `s1` and `s2` into a single stream
     - `single(s)`:  `take(s,1)`
     - `drop_while(s, f)`: drops values from the stream `s` while the function `f` is true
