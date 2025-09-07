@@ -64,9 +64,9 @@ do
     local s3 = S.fr_range(7, 9)
     local streams = S.from{s1, s2, s3}
     local vs = {}
-    streams:to_each(function (s)
-        s:to_each(function (v) vs[#vs+1]=v end)
-    end)
+    streams:tap(function (s)
+        s:tap(function (v) vs[#vs+1]=v end):to()
+    end):to()
     assert(#vs==9 and vs[1]==1 and vs[5]==5 and vs[9]==9)
 end
 
@@ -111,6 +111,10 @@ print(#vs)
     s = s:acc(0, function(a, b) return a end)
     local vs = s:to_table()
     assert(#vs==3 and vs[1]==0 and vs[2]==0 and vs[3]==0)
+
+    s = S.fr_range(1, 5)
+    local reduced = S.acc(s, 0, function(a, b) return a + b end):to()
+    assert(reduced == 15)
 end
 
 do
@@ -245,13 +249,17 @@ do
     local s = S.fr_range(1, 5)
     local tapped = s:tap(function(x) end)
     local result = {}
-    tapped:to_each(function(x) table.insert(result, x) end)
+    tapped:tap(function(x) table.insert(result, x) end):to()
     assert(#result == 5)
     assert(result[1] == 1)
     assert(result[2] == 2)
     assert(result[3] == 3)
     assert(result[4] == 4)
     assert(result[5] == 5)
+
+    s = S.fr_range(1, 5)
+    S.tap(s, function(x) assert(x >= 1 and x <= 5) end):to()
+    assert(s() == nil)
 end
 
 print "--- ZIP ---"
@@ -260,40 +268,32 @@ do
     local s2 = S.from(6, 10)
     local zipped = S.zip(s1, s2)
     local t = {}
-    zipped:to_each(function(xy) table.insert(t, xy[1]+xy[2]) end)
+    zipped:tap(function(xy) table.insert(t, xy[1]+xy[2]) end):to()
     assert(#t==5 and t[1]==7 and t[5]==15)
 end
 
 -- SINKS
 
-s = S.fr_range(1, 5)
-local sum = S.to_sum(s)
-assert(sum == 15)
-assert(s() == nil)
+print "- SUM / MUL / MIN / MAX -"
+do
+    s = S.fr_range(1, 5)
+    local sum = S.sum(s):to()
+    assert(sum == 15)
+    assert(s() == nil)
 
-s = S.fr_range(1, 5)
-local mul = S.to_mul(s)
-assert(mul == 120)
+    s = S.fr_range(1, 5)
+    local mul = S.mul(s):to()
+    assert(mul == 120)
 
-s = S.fr_range(1, 5)
-local min = S.to_min(s)
-assert(min == 1)
-assert(s() == nil)
+    s = S.fr_range(1, 5)
+    local min = S.min(s):to()
+    assert(min == 1)
+    assert(s() == nil)
 
-s = S.fr_range(1, 5)
-local max = S.to_max(s)
-assert(max == 5)
-
-s = S.fr_range(1, 5)
-local reduced = S.to_acc(s, 0, function(a, b) return a + b end)
-assert(reduced == 15)
-
-s = S.fr_range(1, 5)
-S.to_each(s, function(x) assert(x >= 1 and x <= 5) end)
-assert(s() == nil)
-
-s = S.from(10)
-assert(S.to_first(s) == 10)
+    s = S.fr_range(1, 5)
+    local max = S.max(s):to()
+    assert(max == 5)
+end
 
 print "-  ANY / ALL / NONE / SOME -"
 do
@@ -316,11 +316,19 @@ do
 end
 
 print '--- TO ---'
+do
+    local s = S.fr_range(1, 5)
+    s:to()
+    assert(s() == nil)
 
-local s = S.fr_range(1, 5)
-s:to()
-assert(s() == nil)
+    local s = S.fr_range(1, 5)
+    local result = s:to()
+    assert(result == 5)
 
-local s = S.fr_range(1, 5)
-local result = s:to()
-assert(result == nil)
+    s = S.from(10)
+    assert(S.to_first(s) == 10)
+
+    s = S.empty()
+    assert(S.to_first(s) == nil)
+    assert(S.to_last(s) == nil)
+end

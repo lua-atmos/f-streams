@@ -57,7 +57,7 @@ do
     local r = S.from(1, 10) -- all the numbers from 1 to 10 (inclusive)
     local e = S.filter(r, function(it) return it%2==0 end) -- take only even numbers
     local t = {}
-    S.to_each(e, function (it) t[#t+1]=it end)
+    S.tap(e, function (it) t[#t+1]=it end):to()
     assert(#t==5 and t[1]==2 and t[5]==10)
 end
 

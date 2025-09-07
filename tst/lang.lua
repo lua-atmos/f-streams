@@ -12,9 +12,10 @@ S.from(1)                                       -- 1, 2, 3, ...
     :filter(function(x) return x%2 == 1 end)    -- 1, 3, 5, ...
     :map(function(x) return x * 2 end)          -- 2, 6, 10, ...
     :take(3)                                    -- 2, 6, 10
-    :to_each(function (v)
+    :tap(function (v)
         vs[#vs+1] = v                           -- 2 / 6 / 10
     end)
+    :to()
 assert(#vs==3 and vs[1]==2 and vs[3]==10)
 
 print("Testing...", "test 03: filter map")

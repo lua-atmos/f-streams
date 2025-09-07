@@ -181,6 +181,24 @@ function M.tap (s, f)
     end)
 end
 
+do
+    function M.max (s)
+        return M.acc(s, -math.huge, function(a,x) return math.max(a,x) end)
+    end
+
+    function M.min (s)
+        return M.acc(s, math.huge, function(a,x) return math.min(a,x) end)
+    end
+
+    function M.mul (s)
+        return M.acc(s, 1, function(a,x) return a*x end)
+    end
+
+    function M.sum (s)
+        return M.acc(s, 0, function(a,x) return a+x end)
+    end
+end
+
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
 
@@ -251,22 +269,28 @@ end
 
 M.to = M.to_last
 
+function M.to_first (s)
+    return s()
+end
+
 -------------------------------------------------------------------------------
 
-function M.to_any (s, f)
-    return (s:filter(f):to_first() ~= nil)
-end
+do
+    function M.to_any (s, f)
+        return (s:filter(f):to_first() ~= nil)
+    end
 
-function M.to_some (s, f)
-    return (s:filter(f):skip(1):to_first() ~= nil)
-end
+    function M.to_some (s, f)
+        return (s:filter(f):skip(1):to_first() ~= nil)
+    end
 
-function M.to_all (s, f)
-    return not (s:to_any(function(x) return not f(x) end))
-end
+    function M.to_all (s, f)
+        return not (s:to_any(function(x) return not f(x) end))
+    end
 
-function M.to_none (s, p)
-    return not s:to_any(p)
+    function M.to_none (s, p)
+        return not s:to_any(p)
+    end
 end
 
 -------------------------------------------------------------------------------
@@ -336,17 +360,13 @@ function M.zip (s1, s2)
     return setmetatable(t, M.mt)
 end
 
+    function M.to_vector (s)
+        return M.to_table(s)
+    end
+
 -------------------------------------------------------------------------------
 -- SINKS
 -------------------------------------------------------------------------------
-
-function M.to (s)
-    M.to_acc(s, nil, function() end)
-end
-
-function M.to_first (s)
-    return s()
-end
 
 function M.to_acc (s, acc, f)
     local s <close> = s
@@ -358,38 +378,12 @@ function M.to_acc (s, acc, f)
     return acc
 end
 
-do  -- all derived from `to_acc`
-    function M.to_each (s, f)
-        return M.to_acc(s, nil, function(a,...) f(...) ; return true end)
-    end
-
     function M.to_print (s)
         return s:to_each(function (...) print(...) end)
-    end
-
-    function M.to_max (s)
-        return M.to_acc(s, -math.huge, function(a,x) return math.max(a,x) end)
-    end
-
-    function M.to_min (s)
-        return M.to_acc(s, math.huge, function(a,x) return math.min(a,x) end)
-    end
-
-    function M.to_mul (s)
-        return M.to_acc(s, 1, function(a,x) return a*x end)
-    end
-
-    function M.to_sum (s)
-        return M.to_acc(s, 0, function(a,x) return a+x end)
     end
 
     function M.to_table (s)
         return M.to_acc(s, {}, function(a,x) a[#a+1]=x ; return a end)
     end
-
-    function M.to_vector (s)
-        return M.to_table(s)
-    end
-end
 
 return M
