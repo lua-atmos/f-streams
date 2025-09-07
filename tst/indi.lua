@@ -58,6 +58,21 @@ do
 end
 
 do
+    print("Testing...", "function 1")
+    local n = 0
+    s = S.fr_function (
+        function ()
+            n = n+1
+            if n<=3 then
+                return n
+            end
+        end
+    )
+    local vs = s:table():to()
+    assert(#vs==3 and vs[1]==1 and vs[2]==2 and vs[3]==3)
+end
+
+do
     print("Testing...", "streams 1")
     local s1 = S.fr_range(1, 3)
     local s2 = S.fr_range(4, 6)

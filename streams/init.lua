@@ -77,6 +77,15 @@ end
 
 -------------------------------------------------------------------------------
 
+function M.fr_function (f)
+    local t = {
+        f = f,
+    }
+    return setmetatable(t, M.mt)
+end
+
+-------------------------------------------------------------------------------
+
 local function fr_range (t)
     if t.b and t.a>t.b then
         return nil
