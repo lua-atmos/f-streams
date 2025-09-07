@@ -210,6 +210,18 @@ end
 
 -------------------------------------------------------------------------------
 
+function M.filter (s, f)
+    return s:map(function(v)
+        if f(v) then
+            return M.fr_const(v)
+        else
+            return M.empty()
+        end
+    end):xseq()
+end
+
+-------------------------------------------------------------------------------
+
 function M.skip (s, n)
     return s:mapi(function(i, v)
         if i > n then
@@ -219,6 +231,25 @@ function M.skip (s, n)
         end
     end):xseq()
 end
+
+-------------------------------------------------------------------------------
+-- SINKS
+-------------------------------------------------------------------------------
+
+function M.to_last (s)
+    local s <close> = s
+    local v = nil
+    local x = s()
+    while true do
+        if x == nil then
+            return v
+        end
+        v = x
+        x = s()
+    end
+end
+
+M.to = M.to_last
 
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
@@ -242,25 +273,6 @@ function M.distinct (s)
         s = s,
         seen = {},
         f = distinct,
-    }
-    return setmetatable(t, M.mt)
-end
-
--------------------------------------------------------------------------------
-
-local function filter (t)
-    local v
-    repeat
-        v = t.s()
-    until v==nil or t.p(v)
-    return v
-end
-
-function M.filter(s, p)
-    local t = {
-        s = s,
-        p = p,
-        f = filter,
     }
     return setmetatable(t, M.mt)
 end
