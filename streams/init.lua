@@ -160,6 +160,40 @@ end
 
 -------------------------------------------------------------------------------
 
+local function tee (t)
+    if #t.q1 == 0 then
+        local v = t.s()
+        if v ~= nil then
+            table.insert(t.q1, v)
+            table.insert(t.q2, v)
+        end
+    end
+    if #t.q1 > 0 then
+        return table.remove(t.q1, 1)
+    end
+end
+
+function M.tee (s)
+    local q1, q2 = {}, {}
+    local t1 = {
+        s  = s,
+        q1 = q1,
+        q2 = q2,
+        f  = tee,
+    }
+    local t2 = {
+        s  = s,
+        q1 = q2,
+        q2 = q1,
+        f  = tee,
+    }
+    t1 = setmetatable(t1, M.mt)
+    t2 = setmetatable(t2, M.mt)
+    return t1, t2
+end
+
+-------------------------------------------------------------------------------
+
 function M.map (s, f)
     return M.acc(s, nil, function (_, v) return f(v) end)
 end

@@ -133,6 +133,19 @@ print(#vs)
     assert(reduced == 15)
 end
 
+print "- TEE -"
+do
+    print("Testing...", "tee 1")
+    local s = S.from({1, 2, 3, 4, 5})
+    local s1, s2 = S.tee(s)
+    local resultado1 = S.table(s1):to()
+    local resultado2 = S.table(s2):to()
+    assert(#resultado1==5 and #resultado2==5)
+    for i = 1, 5 do
+        assert(resultado1[i]==i and resultado2[i]==i)
+    end
+end
+
 do
     print("Testing...", "map 1")
     s = S.fr_range(1, 5)

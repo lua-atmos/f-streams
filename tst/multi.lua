@@ -143,6 +143,44 @@ do
     assert(tapped[5] == 10)
 end
 
+print '--- TEE ---'
+
+do
+    print("Testing...", "tee 01: filter")
+    local s = S.from({1, 2, 3, 4, 5})
+    local s1, s2 = S.tee(s)
+    local s1_filtrado = s1:filter(function(x) return x % 2 == 0 end)
+    local s2_filtrado = s2:filter(function(x) return x % 2 ~= 0 end)
+    local resultado1 = S.table(s1_filtrado):to()
+    local resultado2 = S.table(s2_filtrado):to()
+    assert(#resultado1 == 2 and #resultado2 == 3)
+    assert(resultado1[1] == 2 and resultado1[2] == 4)
+    assert(resultado2[1] == 1 and resultado2[2] == 3 and resultado2[3] == 5)
+
+    print("Testing...", "tee 02: map")
+    local s = S.from({1, 2, 3, 4, 5})
+    local s1, s2 = S.tee(s)
+    local s1_mapeado = s1:map(function(x) return x * 2 end)
+    local s2_mapeado = s2:map(function(x) return x + 1 end)
+    local resultado1 = S.table(s1_mapeado):to()
+    local resultado2 = S.table(s2_mapeado):to()
+    assert(#resultado1 == 5 and #resultado2 == 5)
+    for i = 1, 5 do
+        assert(resultado1[i] == i * 2 and resultado2[i] == i + 1)
+    end
+
+    print("Testing...", "tee 03: filter/map")
+    local s = S.from({1, 2, 3, 4, 5})
+    local s1, s2 = S.tee(s)
+    local s1_filtrado = s1:filter(function(x) return x % 2 == 0 end):map(function(x) return x * 2 end)
+    local s2_filtrado = s2:filter(function(x) return x % 2 ~= 0 end):map(function(x) return x + 1 end)
+    local resultado1 = S.table(s1_filtrado):to()
+    local resultado2 = S.table(s2_filtrado):to()
+    assert(#resultado1 == 2 and #resultado2 == 3)
+    assert(resultado1[1] == 4 and resultado1[2] == 8)
+    assert(resultado2[1] == 2 and resultado2[2] == 4 and resultado2[3] == 6)
+end
+
 -- TODO
 
 --[===[
