@@ -140,7 +140,34 @@ end
 
 -------------------------------------------------------------------------------
 
-local function acc (t)
+local function acc0 (t)
+    if t.done then
+        return nil
+    end
+    local cur = t.cur
+    local v = t.s()
+    if v == nil then
+        t.done = true
+    else
+        t.cur = t.g(t.cur, v)
+    end
+    return cur
+end
+
+function M.acc0 (s, z, g)
+    local t = {
+        s    = s,
+        g    = g,
+        cur  = z,
+        done = false,
+        f    = acc0,
+    }
+    return setmetatable(t, M.mt)
+end
+
+-------------------------------------------------------------------------------
+
+local function acc1 (t)
     local v = t.s()
     if v ~= nil then
         t.cur = t.g(t.cur, v)
@@ -148,12 +175,12 @@ local function acc (t)
     end
 end
 
-function M.acc (s, z, g)
+function M.acc1 (s, g)
     local t = {
         s   = s,
         g   = g,
-        cur = z,
-        f   = acc,
+        cur = nil,
+        f   = acc1,
     }
     return setmetatable(t, M.mt)
 end
@@ -195,7 +222,7 @@ end
 -------------------------------------------------------------------------------
 
 function M.map (s, f)
-    return M.acc(s, nil, function (_, v) return f(v) end)
+    return M.acc1(s, function (_, v) return f(v) end)
 end
 
 function M.mapi (s, f)
@@ -207,12 +234,12 @@ function M.mapi (s, f)
 end
 
 function M.table (s)
-    return M.acc(s, {}, function(a,v) a[#a+1]=v ; return a end)
+    return M.acc0(s, {}, function(a,v) a[#a+1]=v ; return a end)
 end
 
 function M.take (s, n)
     local i = 0
-    return M.acc(s, nil, function (_, v)
+    return M.acc1(s, function (_, v)
         i = i + 1
         if i <= n then
             return v
@@ -221,7 +248,7 @@ function M.take (s, n)
 end
 
 function M.tap (s, f)
-    return M.acc(s, nil, function (_, v)
+    return M.acc1(s, function (_, v)
         f(v)
         return v
     end)
@@ -229,16 +256,16 @@ end
 
 do
     function M.max (s)
-        return M.acc(s, -math.huge, function(a,x) return math.max(a,x) end)
+        return M.acc0(s, -math.huge, function(a,x) return math.max(a,x) end)
     end
     function M.min (s)
-        return M.acc(s, math.huge, function(a,x) return math.min(a,x) end)
+        return M.acc0(s, math.huge, function(a,x) return math.min(a,x) end)
     end
     function M.mul (s)
-        return M.acc(s, 1, function(a,x) return a*x end)
+        return M.acc0(s, 1, function(a,x) return a*x end)
     end
     function M.sum (s)
-        return M.acc(s, 0, function(a,x) return a+x end)
+        return M.acc0(s, 0, function(a,x) return a+x end)
     end
 end
 

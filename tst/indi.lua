@@ -98,38 +98,37 @@ print "- ACC -"
 do
     print("Testing...", "acc 1: +")
     local s = S.from {1, 2, 3}
-    s = s:acc(0, function(a, b) return a + b end)
+    s = s:acc0(0, function(a, b) return a + b end)
     local vs = s:table():to()
-print(#vs)
-    assert(#vs==3 and vs[1]==1 and vs[2]==3 and vs[3]==6)
+    assert(#vs==4 and vs[1]==0 and vs[2]==1 and vs[3]==3 and vs[4]==6)
 
     print("Testing...", "acc 2: *")
     local s = S.from {1, 2, 3}
-    s = s:acc(1, function(a, b) return a * b end)
+    s = s:acc0(1, function(a, b) return a * b end)
     local vs = s:table():to()
-    assert(#vs==3 and vs[1]==1 and vs[2]==2 and vs[3]==6)
+    assert(#vs==4 and vs[1]==1 and vs[2]==1 and vs[3]==2 and vs[4]==6)
 
     print("Testing...", "acc 3: {}")
     local s = S.from {}
-    s = s:acc(1, function(a, b) return a + b end)
+    s = s:acc0(1, function(a, b) return a + b end)
     local vs = s:table():to()
-    --assert(#vs==0)
-    assert(vs==nil)
+    assert(#vs==1 and vs[1]==1)
+    --assert(vs==1)
 
     print("Testing...", "acc 4: {1}")
     local s = S.from {5}
-    s = s:acc(0, function(a, b) return a + b end)
+    s = s:acc0(0, function(a, b) return a + b end)
     local vs = s:table():to()
-    assert(#vs==1 and vs[1]==5)
+    assert(#vs==2 and vs[2]==5)
 
     print("Testing...", "acc 5: id")
     local s = S.from {1,2,3}
-    s = s:acc(0, function(a, b) return a end)
+    s = s:acc0(0, function(a, b) return a end)
     local vs = s:table():to()
-    assert(#vs==3 and vs[1]==0 and vs[2]==0 and vs[3]==0)
+    assert(#vs==4 and vs[1]==0 and vs[2]==0 and vs[3]==0 and vs[4]==0)
 
     s = S.fr_range(1, 5)
-    local reduced = S.acc(s, 0, function(a, b) return a + b end):to()
+    local reduced = S.acc0(s, 0, function(a, b) return a + b end):to()
     assert(reduced == 15)
 end
 

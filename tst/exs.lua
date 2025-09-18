@@ -74,7 +74,7 @@ end
 do
     print("Testing...", "acc 1")
     local numbers = S.fr_range(10,15)
-    local sum = S.acc(numbers, 0, function(acc,new) return acc+new end):to()
+    local sum = S.acc0(numbers, 0, function(acc,new) return acc+new end):to()
     assert(sum == 75)
 end
 
