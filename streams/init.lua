@@ -233,6 +233,13 @@ function M.mapi (s, f)
     end)
 end
 
+function M.sort (s, f)
+    return s:map(function (t)
+        table.sort(t, f)    -- TODO: insertion sort
+        return t
+    end)
+end
+
 function M.table (s)
     return M.acc0(s, {}, function(a,v) a[#a+1]=v ; return a end)
 end

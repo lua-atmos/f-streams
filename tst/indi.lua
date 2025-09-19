@@ -173,6 +173,39 @@ s = S.take(s, 5)
 values = S.table(s):to()
 assert(#values == 5 and values[1] == 1 and values[5] == 5)
 
+print "--- SORT ---"
+do
+    -- Teste 1: Ordenação crescente
+    local s = S.from({3, 1, 2, 4})
+    local t = s:table():sort(function(a, b) return a < b end):to()
+    assert(t[1] == 1)
+    assert(t[2] == 2)
+    assert(t[3] == 3)
+    assert(t[4] == 4)
+
+    -- Teste 2: Ordenação decrescente
+    local s = S.from({3, 1, 2, 4})
+    local t = s:table():sort(function(a, b) return a > b end):to()
+    assert(t[1] == 4)
+    assert(t[2] == 3)
+    assert(t[3] == 2)
+    assert(t[4] == 1)
+
+    -- Teste 3: Ordenação com valores repetidos
+    local s = S.from({3, 1, 2, 2, 4})
+    local t = s:table():sort(function(a, b) return a < b end):to()
+    assert(t[1] == 1)
+    assert(t[2] == 2)
+    assert(t[3] == 2)
+    assert(t[4] == 3)
+    assert(t[5] == 4)
+
+    -- Teste 4: Ordenação com stream vazio
+    local s = S.empty()
+    local t = s:table():sort(s, function(a, b) return a < b end)
+    assert(t == nil or #t == 0)
+end
+
 print "--- XSEQ ---"
 do
     print("Testing...", "xseq 0")

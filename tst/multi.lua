@@ -181,6 +181,31 @@ do
     assert(resultado2[1] == 2 and resultado2[2] == 4 and resultado2[3] == 6)
 end
 
+print '--- SORT ---'
+
+do
+    -- Teste 5: Combinação com S.take
+    local t = S.from({3, 1, 2, 4, 5})
+        :table()
+        :sort(function(a, b) return a < b end)
+        :take(3)
+        :to()
+    assert(t[1] == 1)
+    assert(t[2] == 2)
+    assert(t[3] == 3)
+
+    -- Teste 6: Combinação com S.map
+    local t = S.from({3, 1, 2, 4})
+        :map(function(x) return x * 2 end)
+        :table()
+        :sort(function(a, b) return a < b end)
+        :to()
+    assert(t[1] == 2)
+    assert(t[2] == 4)
+    assert(t[3] == 6)
+    assert(t[4] == 8)
+end
+
 -- TODO
 
 --[===[
