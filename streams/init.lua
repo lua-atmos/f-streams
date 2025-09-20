@@ -350,10 +350,6 @@ function M.to_first (s)
     return s()
 end
 
-function M.to_print (s)
-    return s:tap(print):to()
-end
-
 -------------------------------------------------------------------------------
 
 do
