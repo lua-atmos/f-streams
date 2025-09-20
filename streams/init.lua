@@ -187,6 +187,26 @@ end
 
 -------------------------------------------------------------------------------
 
+local function tuple (t)
+    return (function (...)
+        if select('#',...) > 0 then
+            local v = { tag=t.tag, t.s() }
+            return v
+        end
+    end)(t.s())
+end
+
+function M.tuple (s, tag)
+    local t = {
+        s   = s,
+        tag = tag,
+        f   = tuple,
+    }
+    return setmetatable(t, M.mt)
+end
+
+-------------------------------------------------------------------------------
+
 local function tee (t)
     if #t.q1 == 0 then
         local v = t.s()

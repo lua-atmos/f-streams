@@ -132,6 +132,13 @@ do
     assert(reduced == 15)
 end
 
+print "- TUPLE -"
+do
+    local s = S.from(function () return 1,2,3 end)
+    local t = s:tuple('x'):to_first()
+    assert(t.tag=='x' and #t==3 and t[2]==2)
+end
+
 print "- TEE -"
 do
     print("Testing...", "tee 1")
