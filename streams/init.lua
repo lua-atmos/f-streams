@@ -207,7 +207,7 @@ end
 
 -------------------------------------------------------------------------------
 
-local function tee (t)
+local function tee2 (t)
     if #t.q1 == 0 then
         local v = t.s()
         if v ~= nil then
@@ -220,23 +220,36 @@ local function tee (t)
     end
 end
 
-function M.tee (s)
+function M.tee2 (s)
     local q1, q2 = {}, {}
     local t1 = {
         s  = s,
         q1 = q1,
         q2 = q2,
-        f  = tee,
+        f  = tee2,
     }
     local t2 = {
         s  = s,
         q1 = q2,
         q2 = q1,
-        f  = tee,
+        f  = tee2,
     }
     t1 = setmetatable(t1, M.mt)
     t2 = setmetatable(t2, M.mt)
     return t1, t2
+end
+
+function M.tee (s, n)
+    n = n or 2
+    assert(n >= 1)
+    local ss = { s }
+    for i=2, n do
+        local s1,s2 = M.tee2(ss[#ss])
+        ss[#ss] = nil
+        ss[#ss+1] = s1
+        ss[#ss+1] = s2
+    end
+    return table.unpack(ss)
 end
 
 -------------------------------------------------------------------------------

@@ -150,6 +150,22 @@ do
     for i = 1, 5 do
         assert(resultado1[i]==i and resultado2[i]==i)
     end
+
+    print("Testing...", "tee 2")
+    local s = S.from({1, 2, 3, 4, 5})
+    local s1, s2, s3, s4 = S.tee(s,4)
+    local r1 = S.table(s1):to()
+    local r2 = S.table(s2):to()
+    local r3 = S.table(s3):to()
+    local r4 = S.table(s4):to()
+    assert(#r1==5 and #r2==5)
+    assert(#r2==5 and #r3==5)
+    for i = 1, 5 do
+        assert(r1[i]==i and r2[i]==i)
+    end
+    for i = 1, 5 do
+        assert(r3[i]==i and r4[i]==i)
+    end
 end
 
 do
