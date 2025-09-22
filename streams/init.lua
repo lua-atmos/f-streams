@@ -239,8 +239,20 @@ function M.tee2 (s)
     return t1, t2
 end
 
-function M.tee (s, n)
-    n = n or 2
+function M.tee (s, n, ...)
+    local fs = { n, ... }
+    if n == nil then
+        n = 2
+        fs = nil
+    elseif type(n) == 'number' then
+        fs = nil
+        assert(select('#',...) == 0)
+    else
+        n = #fs
+        for _,f in ipairs(fs) do
+            assert(type(f) == 'function')
+        end
+    end
     assert(n >= 1)
     local ss = { s }
     for i=2, n do
@@ -249,6 +261,13 @@ function M.tee (s, n)
         ss[#ss+1] = s1
         ss[#ss+1] = s2
     end
+
+    if fs then
+        for i,f in ipairs(fs) do
+            ss[i] = f(ss[i])
+        end
+    end
+
     return table.unpack(ss)
 end
 

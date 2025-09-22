@@ -166,6 +166,28 @@ do
     for i = 1, 5 do
         assert(r3[i]==i and r4[i]==i)
     end
+
+    print("Testing...", "tee 3: funcs")
+    local s = S.from({1, 2, 3, 4, 5})
+    local s1, s2, s3 = S.tee (
+        s,
+        function(x) return x:map(function (it) return it*2 end) end,
+        function(x) return x:filter(function (it) return it<=3 end) end,
+        function(x) return x:filter(function (it) return it>=3 end) end
+    )
+    local r1 = S.table(s1):to()
+    local r2 = S.table(s2):to()
+    local r3 = S.table(s3):to()
+    assert(#r1==5 and #r2==3 and #r3==3)
+    for i=1,5 do
+        assert(r1[i] == i*2)
+    end
+    for i=1,3 do
+        assert(r2[i] == i)
+    end
+    for i=1,3 do
+        assert(r3[i] == i+2)
+    end
 end
 
 do
