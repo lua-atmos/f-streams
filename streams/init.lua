@@ -54,10 +54,12 @@ end
 -------------------------------------------------------------------------------
 
 local function fr_coroutine (t)
-    return (function (_, ...)
-        if select('#',...) >= 0 then
-            return ...
+    return (function (ok, ...)
+        assert(ok)
+        if (... == nil) then
+            return nil
         end
+        return ...
     end)(coroutine.resume(t.co))
 end
 
@@ -107,11 +109,12 @@ end
 -------------------------------------------------------------------------------
 
 local function fr_table (t)
-    if t.i <= #t.t then
-        local v = t.t[t.i]
-        t.i = t.i + 1
-        return v
+    if t.i > #t.t then
+        return nil
     end
+    local v = t.t[t.i]
+    t.i = t.i + 1
+    return v
 end
 
 function M.fr_table (t)
@@ -169,10 +172,11 @@ end
 
 local function acc1 (t)
     local v = t.s()
-    if v ~= nil then
-        t.cur = t.g(t.cur, v)
-        return t.cur
+    if v == nil then
+        return nil
     end
+    t.cur = t.g(t.cur, v)
+    return t.cur
 end
 
 function M.acc1 (s, g)
@@ -189,10 +193,10 @@ end
 
 local function tuple (t)
     return (function (...)
-        if select('#',...) > 0 then
-            local v = { tag=t.tag, t.s() }
-            return v
+        if select('#',...) <= 0 then
+            return nil
         end
+        return { tag=t.tag, t.s() }
     end)(t.s())
 end
 
@@ -215,9 +219,10 @@ local function tee2 (t)
             table.insert(t.q2, v)
         end
     end
-    if #t.q1 > 0 then
-        return table.remove(t.q1, 1)
+    if #t.q1 <= 0 then
+        return nil
     end
+    return table.remove(t.q1, 1)
 end
 
 function M.tee2 (s)
@@ -300,9 +305,10 @@ function M.take (s, n)
     local i = 0
     return M.acc1(s, function (_, v)
         i = i + 1
-        if i <= n then
-            return v
+        if i > n then
+            return nil
         end
+        return v
     end)
 end
 
@@ -312,6 +318,8 @@ function M.tap (s, f)
         return v
     end)
 end
+
+-------------------------------------------------------------------------------
 
 do
     function M.max (s)
