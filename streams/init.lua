@@ -340,6 +340,9 @@ end
 -------------------------------------------------------------------------------
 
 local function xseq (t)
+    if t.s == false then
+        t.s = t.ss()
+    end
     if t.s == nil then
         return nil
     end
@@ -357,7 +360,7 @@ end
 function M.xseq (ss)
     local t = {
         ss = ss,
-        s = ss(),
+        s = false,
         f = xseq,
     }
     return setmetatable(t, M.mt)
