@@ -47,10 +47,6 @@ function M.fr_consts (v)
     return setmetatable(t, M.mt)
 end
 
-function M.fr_const (v)
-    return M.fr_consts(v):take(1)
-end
-
 -------------------------------------------------------------------------------
 
 local function fr_coroutine (t)
@@ -371,7 +367,7 @@ end
 function M.filter (s, f)
     return s:map(function(v)
         if f(v) then
-            return M.fr_const(v)
+            return M.fr_consts(v):take(1)
         else
             return M.empty()
         end
@@ -383,7 +379,7 @@ end
 function M.skip (s, n)
     return s:mapi(function(i, v)
         if i > n then
-            return M.fr_const(v)
+            return M.fr_consts(v):take(1)
         else
             return M.empty()
         end
@@ -438,6 +434,10 @@ end
 -------------------------------------------------------------------------------
 
 --[===[
+function M.fr_const (v)
+    return M.fr_consts(v):take(1)
+end
+
 local function distinct (t)
     local v = t.s()
     while true do
