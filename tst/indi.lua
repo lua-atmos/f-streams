@@ -251,6 +251,44 @@ do
     assert(t == nil or #t == 0)
 end
 
+print "--- SEQ ---"
+do
+    print("Testing...", "seq 1")
+    local s1 = S.from({1, 2, 3})
+    local s2 = S.from({4, 5, 6})
+    local s = s1:seq(s2)
+    local t = s:table():to()
+    assert(#t == 6)
+    for i=1, 6 do
+        assert(t[i] == i)
+    end
+
+    print("Testing...", "seq 2")
+    local s1 = S.from({})
+    local s2 = S.from({1, 2, 3})
+    local s = s1:seq(s2)
+    local t = s:table():to()
+    assert(#t == 3)
+    for i = 1, 3 do
+        assert(t[i] == i)
+    end
+
+    print("Testing...", "seq 3")
+    local s = S.fr_streams(S.from({}), S.from{1,2,3}, S.empty())
+    local t = s:table():to()
+    assert(#t == 3)
+    for i = 1, 3 do
+        assert(t[i] == i)
+    end
+
+    print("Testing...", "seq 4")
+    local t = S.from(S.empty(), S.from{1,2,3}, S.from({})):table():to()
+    assert(#t == 3)
+    for i = 1, 3 do
+        assert(t[i] == i)
+    end
+end
+
 print "--- XSEQ ---"
 do
     print("Testing...", "xseq 0")
@@ -262,7 +300,6 @@ do
     local s2 = S.from({4, 5, 6})
     local s_xseq = S.from{s1,s2}:xseq()
     local t = S.table(s_xseq):to()
-print(#t)
     assert(#t == 6)
     for i=1, 6 do
         assert(t[i] == i)

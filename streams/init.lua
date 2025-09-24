@@ -22,6 +22,8 @@ function M.from (v, ...)
 
     if v==nil or type(v)=='number' then
         return M.fr_range(v, ...)
+    elseif M.is(v) then
+        return M.fr_streams(v, ...)
     elseif type(v) == 'table' then
         return M.fr_table(v)
     elseif type(v) == 'function' then
@@ -108,6 +110,18 @@ end
 
 -------------------------------------------------------------------------------
 
+function M.fr_streams (...)
+    local n = select('#', ...)
+    assert(n >= 2)
+    local s = select(1, ...)
+    for i=2, n do
+        s = s:seq(select(i, ...))
+    end
+    return s
+end
+
+-------------------------------------------------------------------------------
+
 local function fr_table (t)
     if t.i > #t.t then
         return nil
@@ -185,6 +199,74 @@ function M.acc1 (s, g)
         g   = g,
         cur = nil,
         f   = acc1,
+    }
+    return setmetatable(t, M.mt)
+end
+
+-------------------------------------------------------------------------------
+
+local function filter (t)
+    while true do
+        local v = t.s()
+        if v == nil then
+            return nil
+        end
+        if t.g(v) then
+            return v
+        end
+    end
+end
+
+function M.filter (s, g)
+    local t = {
+        s = s,
+        g = g,
+        f = filter,
+    }
+    return setmetatable(t, M.mt)
+end
+
+-------------------------------------------------------------------------------
+
+local function skip (t)
+    while t.n > 0 do
+        if t.s() == nil then
+            return nil
+        end
+        t.n = t.n - 1
+    end
+    return t.s()
+end
+
+function M.skip (s, n)
+    local t = {
+        s = s,
+        n = n or 1,
+        f = skip
+    }
+    return setmetatable(t, M.mt)
+end
+
+-------------------------------------------------------------------------------
+
+local function seq (t)
+    local v = t.cur()
+    if v == nil then
+        if t.nxt == nil then
+            return nil
+        end
+        t.cur = t.nxt
+        t.nxt = nil
+        v = t.cur()
+    end
+    return v
+end
+
+function M.seq (s1, s2)
+    local t = {
+        cur = s1,
+        nxt = s2,
+        f = seq
     }
     return setmetatable(t, M.mt)
 end
@@ -364,30 +446,6 @@ function M.xseq (ss)
         f = xseq,
     }
     return setmetatable(t, M.mt)
-end
-
--------------------------------------------------------------------------------
-
-function M.filter (s, f)
-    return s:map(function(v)
-        if f(v) then
-            return M.fr_const(v)
-        else
-            return M.empty()
-        end
-    end):xseq()
-end
-
--------------------------------------------------------------------------------
-
-function M.skip (s, n)
-    return s:mapi(function(i, v)
-        if i > n then
-            return M.fr_const(v)
-        else
-            return M.empty()
-        end
-    end):xseq()
 end
 
 -------------------------------------------------------------------------------
