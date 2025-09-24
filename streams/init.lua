@@ -337,18 +337,20 @@ end
 -------------------------------------------------------------------------------
 
 local function zip (t)
-    local v1 = t.s1()
-    local v2 = t.s2()
-    if v1==nil or v2==nil then
-        return nil
+    local vs = {}
+    for i,s in ipairs(t.ss) do
+        local v = s()
+        if v == nil then
+            return nil
+        end
+        vs[i] = v
     end
-    return {v1, v2}
+    return vs
 end
 
-function M.zip (s1, s2)
+function M.zip (...)
     local t = {
-        s1 = s1,
-        s2 = s2,
+        ss = {...},
         f  = zip,
     }
     return setmetatable(t, M.mt)

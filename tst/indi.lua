@@ -405,6 +405,15 @@ do
     local t = {}
     s:tap(function(xy) table.insert(t, xy[1]+xy[2]) end):to()
     assert(#t==5 and t[1]==7 and t[5]==15)
+
+    print("Testing...", "zip 4")
+    local s1 = S.from(1, 5)
+    local s2 = S.from(6)
+    local s3 = S.from(0)
+    local s = S.zip(s1,s2,s3)
+    local t = {}
+    s:tap(function(xy) table.insert(t, xy[1]+xy[2]+xy[3]) end):to()
+    assert(#t==5 and t[1]==7 and t[5]==19)
 end
 
 -- SINKS
