@@ -269,26 +269,6 @@ end
 
 -------------------------------------------------------------------------------
 
-local function tuple (t)
-    return (function (...)
-        if select('#',...) <= 0 then
-            return nil
-        end
-        return { tag=t.tag, t.s() }
-    end)(t.s())
-end
-
-function M.tuple (s, tag)
-    local t = {
-        s   = s,
-        tag = tag,
-        f   = tuple,
-    }
-    return setmetatable(t, M.mt)
-end
-
--------------------------------------------------------------------------------
-
 local function tee2 (t)
     if #t.q1 == 0 then
         local v = t.s()
@@ -352,6 +332,26 @@ function M.tee (s, n, ...)
     end
 
     return table.unpack(ss)
+end
+
+-------------------------------------------------------------------------------
+
+local function zip (t)
+    local v1 = t.s1()
+    local v2 = t.s2()
+    if v1==nil or v2==nil then
+        return nil
+    end
+    return {v1, v2}
+end
+
+function M.zip (s1, s2)
+    local t = {
+        s1 = s1,
+        s2 = s2,
+        f  = zip,
+    }
+    return setmetatable(t, M.mt)
 end
 
 -------------------------------------------------------------------------------
@@ -564,28 +564,29 @@ end
 
 -------------------------------------------------------------------------------
 
-local function zip (t)
-    local v1 = t.s1()
-    local v2 = t.s2()
-    if v1~=nil and v2~=nil then
-        return {v1, v2}
-    else
-        return nil
+    function M.to_vector (s)
+        return M.to_table(s)
     end
+
+local function tuple (t)
+    return (function (...)
+        if ... == nil then
+            return nil
+        end
+        return { tag=t.tag, ... }
+    end)(t.s())
 end
 
-function M.zip (s1, s2)
+function M.tuple (s, tag)
     local t = {
-        s1 = s1,
-        s2 = s2,
-        f  = zip,
+        s   = s,
+        tag = tag,
+        f   = tuple,
     }
     return setmetatable(t, M.mt)
 end
 
-    function M.to_vector (s)
-        return M.to_table(s)
-    end
+-------------------------------------------------------------------------------
 
 ]===]
 

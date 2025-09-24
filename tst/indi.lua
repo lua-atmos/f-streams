@@ -126,13 +126,6 @@ do
     assert(reduced == 15)
 end
 
-print "- TUPLE -"
-do
-    local s = S.from(function () return 1,2,3 end)
-    local t = s:tuple('x'):to_first()
-    assert(t.tag=='x' and #t==3 and t[2]==2)
-end
-
 print "- TEE -"
 do
     print("Testing...", "tee 1")
@@ -281,6 +274,20 @@ do
     for i = 1, 3 do
         assert(t[i] == i)
     end
+
+    print("Testing...", "seq 5")
+    local s1 = S.fr_range(1,3)
+    local s2 = S.fr_range(4,6)
+    local s = S.seq(s1, s2)
+    local vs = S.table(s):to()
+    assert(#vs==6 and vs[1]==1 and vs[3]==3 and vs[4]==4 and vs[6]==6)
+
+    print("Testing...", "seq 6")
+    local s1 = S.fr_range(1,2)
+    local s2 = S.fr_range(3,3)
+    local s = S.seq(s1, s2)
+    local vs = S.table(s):to()
+    assert(#vs==3 and vs[1]==1 and vs[2]==2 and vs[3]==3)
 end
 
 print "--- XSEQ ---"
@@ -363,6 +370,41 @@ do
     s = S.fr_range(1, 5)
     S.tap(s, function(x) assert(x >= 1 and x <= 5) end):to()
     assert(s() == nil)
+end
+
+print "- ZIP -"
+do
+    print("Testing...", "zip 1")
+    local s1 = S.fr_range(1,3)
+    local s2 = S.fr_range(4,6)
+    local s = S.zip(s1, s2)
+    local a, b = table.unpack(s())
+    assert(a==1 and b==4)
+    local a, b = table.unpack(s())
+    assert(a==2 and b==5)
+    local a, b = table.unpack(s())
+    assert(a==3 and b==6)
+    assert(s() == nil)
+
+    print("Testing...", "zip 2")
+    local s1 = S.fr_range(1,4)
+    local s2 = S.fr_range(4,6)
+    local s = S.zip(s1, s2)
+    local a, b = table.unpack(s())
+    assert(a==1 and b==4)
+    local a, b = table.unpack(s())
+    assert(a==2 and b==5)
+    local a, b = table.unpack(s())
+    assert(a==3 and b==6)
+    assert(s() == nil)
+
+    print("Testing...", "zip 3")
+    local s1 = S.from(1, 5)
+    local s2 = S.from(6)
+    local s = s1:zip(s2)
+    local t = {}
+    s:tap(function(xy) table.insert(t, xy[1]+xy[2]) end):to()
+    assert(#t==5 and t[1]==7 and t[5]==15)
 end
 
 -- SINKS
@@ -471,13 +513,19 @@ do
     assert(values[10] == 1)
 end
 
-print "--- ZIP ---"
+print "- TUPLE -"
 do
-    local s1 = S.from(1, 5)
-    local s2 = S.from(6, 10)
-    local zipped = S.zip(s1, s2)
-    local t = {}
-    zipped:tap(function(xy) table.insert(t, xy[1]+xy[2]) end):to()
-    assert(#t==5 and t[1]==7 and t[5]==15)
+    print("Testing...", "tuple 1")
+    local s = S.from(function () return 1,2,3 end)
+    local t = s:tuple('x'):to_first()
+    assert(t.tag=='x' and #t==3 and t[2]==2)
+
+    print("Testing...", "tuple 2")
+    local s = S.from(function () return 1,2,3 end)
+    local ts = s:tuple('x'):take(3):table():to()
+    for _, t in ipairs(ts) do
+        assert(t.tag=='x' and #t==3 and t[2]==2)
+    end
 end
+
 ]===]
