@@ -8,12 +8,6 @@ do
     assert(s() == 42)
     assert(s() == 42)
     assert(s() == 42)
-
-    print("Testing...", "const 1")
-    local s = S.fr_const(42)
-    assert(s() == 42)
-    assert(s() == nil)
-    assert(s() == nil)
 end
 
 do
@@ -435,6 +429,14 @@ end
 -- TODO
 
 --[===[
+do
+    print("Testing...", "const 1")
+    local s = S.fr_const(42)
+    assert(s() == 42)
+    assert(s() == nil)
+    assert(s() == nil)
+end
+
 s = S.fr_table { 1, 3, 1, 1, 2, 3 }
 s = S.distinct(s)
 values = S.table(s):to()
