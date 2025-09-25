@@ -26,14 +26,12 @@ print(s())  -- nil
 An example that prints the first three odd numbers multiplied by `2`:
 
 ```
-local S = require "streams"
 S.from(1)                                       -- 1, 2, 3, ...
     :filter(function (x) return x%2 == 1 end)   -- 1, 3, 5, ...
     :map(function (x) return x * 2 end)         -- 2, 6, 10, ...
     :take(3)                                    -- 2, 6, 10
-    :to_each(function (v)
-        print(v)                                -- 2 / 6 / 10
-    end)
+    :tap(print)                                 -- 2 / 6 / 10
+    :to()
 ```
 
 The API is divided into three groups: *sources*, *combinators* and *sinks*.
