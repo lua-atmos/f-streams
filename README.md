@@ -51,12 +51,15 @@ terminates.
     - `fr_counter(a)`:      stream of numbers from `a` to infinity
     - `fr_function(f)`:     stream of `f()` results
     - `fr_range(a,b)`:      stream of numbers from `a` to `b`
+    - `fr_streams(...)`:    stream of values from each stream in `...`
     - `fr_table(t)`:        stream of values from `t`
     - `from(v)`:            calls the appropriate `fr_*` for `v`
 
 - Combinators
-    - `acc(s,z,f)`:     accumulates each value of `s` based on `f`:
-                        `v1=f(z,s()), v2=f(v1,s()), ...`
+    - `acc0(s,z,f)`:    starting with `z`, accumulates each value of `s` based on `f`:
+                        `v0=z, v1=f(z,s()), v2=f(v1,s()), ...`
+    - `acc1(s,f)`:      accumulates each value of `s` based on `f`:
+                        `v1=f(nil,s()), v2=f(v1,s()), ...`
     - `empty()`:        an empty stream
     - `filter(s,f)`:    filters `s` based on `f`
     - `map(s,f)`:       applies `f` to each value of `s`:
@@ -66,13 +69,18 @@ terminates.
     - `max(s)`:         maximum between each value of `s`
     - `min(s)`:         minimum between each value of `s`
     - `mul(s)`:         multiplies each value of `s`
+    - `seq(s1, s2)`:    all values of `s1` followed by all values of `s2`
     - `skip(s,n)`:      skips the first `n` values of `s`
     - `sum(s)`:         sums each value of `s`
-    - `table(s)`:       appends each value of `s` to a table:
-                        `{s()}, {s(),s()}, ...`
+    - `table(s)`:       accumulates each value of `s` into an increasing table:
+                        `{}, {s()}, {s(),s()}, ...`
     - `take(s,n)`:      takes the first `n` values of `s`
     - `tap(s,f)`:       applies `f` to each value of `s`
+    - `tee(s)`:         splits `s` in two
+        - tee(s,n)`:    splits `s` in `n`
+        - tee(s,...)`:  splits `s` in as many `Fi` in `...`, applying `Fi(s)`
     - `xseq(ss)`:       flattens a stream of streams `ss` into a single stream
+    - `zip(...)`:       zips all `Si` in `...` as a stream of tuples `{S1,S2,...}`
 
 - Sinks
     - `to(s)`:          same as `to_last(s)`
@@ -81,8 +89,10 @@ terminates.
     - `to_first(s)`:    first value of `s`
     - `to_last(s)`:     last value of `s`
     - `to_none(s,f)`:   if no values of `s` conform with `f`
-    - `to_print(s)`:    prints all values of `s`
     - `to_some(s,f)`:   if multiple values of `s` conform with `f`
+
+- Other
+    - `S.is(s)`:        returns if `s` is a stream
 
 <!--
 - Sources
@@ -91,19 +101,13 @@ terminates.
     - tapi
     - `distinct(s)`:    removes duplicate values of `s`
     - `loop(fs)`:       repeats the stream `s=fs()` indefinitely
-    - `zip(...)`: combines two streams `s1` and `s2` into a single stream
-    - `single(s)`:  `take(s,1)`
     - `drop_while(s, f)`: drops values from the stream `s` while the function `f` is true
     - `take_while(s, f)`: takes values from the stream `s` while the function `f` is true
         - take_while, skip_while
         - take_until, skip_until
     - `partition(s, f)`: partitions the stream `s` into two or more streams based on the function `f`
 - Sinks
-    - to() que consome geral e retorna algo (resultado do acc?)
     - to_acc_stop, to_acc_until gera o que passa e termina, to_acc_while nao gera o que falha e termina
-    - `to_sorted(s)`: collects the values of the stream `s` into a sorted table
-        - only if sorts as it goes...
-    - to_last
     - to_n
     - S.to_vector
     - S.to_unit
@@ -139,8 +143,9 @@ print all indexes and values:
 -- without `:` notation
 cnt = S.fr_counter()        -- 1, 2, 3, 4, 5, ...
 vs3 = S.take(cnt, 3)        -- 1, 2, 3
-vec = S.to_table(vs3)       -- {1, 2, 3}
-for i,v in ipairs(vec) do
+tab = S.table(vs3)          -- {1}, {1,2}, {1, 2, 3}
+ret = S.to(tab)             -- {1, 2, 3}
+for i,v in ipairs(ret) do
     print(i,v)              -- 1,1 / 2,2 / 3,3
 end
 ```
@@ -148,7 +153,8 @@ end
 From a table with names, prints all starting with `J`:
 
 ```
-js = S.from { "Joao", "Jose", "Maria" }:filter(function(n) return n:find("^J") end)
+js = S.from { "Joao", "Jose", "Maria" }
+        :filter(function(n) return n:find("^J") end)
 for n in js do
     print(n)    -- Joao / Jose
 end
@@ -157,6 +163,5 @@ end
 Prints each value from `1` to `10`:
 
 ```
-vs = S.fr_range(1, 10)
-S.to_each(vs, print)
+S.from(1,10):tap(print):to()
 ```

@@ -370,13 +370,6 @@ function M.mapi (s, f)
     end)
 end
 
-function M.sort (s, f)
-    return s:map(function (t)
-        table.sort(t, f)    -- TODO: insertion sort
-        return t
-    end)
-end
-
 function M.table (s)
     return M.acc0(s, {}, function(a,v) a[#a+1]=v ; return a end)
 end
@@ -444,18 +437,6 @@ function M.xseq (ss)
         f = xseq,
     }
     return setmetatable(t, M.mt)
-end
-
--------------------------------------------------------------------------------
-
-function M.filter (s, f)
-    return s:map(function(v)
-        if f(v) then
-            return M.fr_consts(v):take(1)
-        else
-            return M.empty()
-        end
-    end):xseq()
 end
 
 -------------------------------------------------------------------------------
@@ -589,6 +570,13 @@ function M.tuple (s, tag)
 end
 
 -------------------------------------------------------------------------------
+
+function M.sort (s, f)
+    return s:map(function (t)
+        table.sort(t, f)    -- TODO: insertion sort
+        return t
+    end)
+end
 
 ]===]
 
