@@ -1,6 +1,6 @@
 # f-streams
 
-***Pull Streams for Lua**
+***Pull Streams for Lua***
 
 [
     [`v0.2`](https://github.com/lua-atmos/f-streams/tree/v0.2) |
