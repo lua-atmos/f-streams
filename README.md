@@ -20,7 +20,7 @@ Please, switch to stable [`v0.2`](https://github.com/lua-atmos/f-streams/tree/v0
 - A stream can be iterated over using Lua's generic [for][lua-for] loop.
 - A stream can represent infinite lazy lists.
 
-The next example prints the first three odd numbers multiplied by `2`:
+The following example prints the first three odd numbers multiplied by `2`:
 
 ```
 S.from(1)                                       -- 1, 2, 3, ...
@@ -29,6 +29,20 @@ S.from(1)                                       -- 1, 2, 3, ...
     :take(3)                                    -- 2, 6, 10
     :tap(print)                                 -- 2 / 6 / 10
     :to()
+```
+
+# Install & Run
+
+```
+sudo luarocks install f-streams
+lua <example.lua>
+```
+
+You may also copy the file `streams/init.lua` as `streams.lua` into your Lua
+path, e.g.:
+
+```
+cp streams/init.lua /usr/local/share/lua/5.4/streams.lua
 ```
 
 # API
@@ -116,20 +130,6 @@ However, this limitation is addressed by [`lua-atmos`](lua-atmos), which
 extends `f-streams` with equivalent combinators.
 
 [rx-merge]: https://rxmarbles.com/#merge
-
-# Install & Run
-
-```
-sudo luarocks install f-streams
-lua <example.lua>
-```
-
-You may also copy the file `streams/init.lua` as `streams.lua` into your Lua
-path, e.g.:
-
-```
-cp streams/init.lua /usr/local/share/lua/5.4/streams.lua
-```
 
 # Examples
 
