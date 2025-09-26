@@ -393,10 +393,6 @@ do
     assert(s() == nil)
 
     s = S.fr_range(1, 5)
-    local mul = S.mul(s):to()
-    assert(mul == 120)
-
-    s = S.fr_range(1, 5)
     local min = S.min(s):to()
     assert(min == 1)
     assert(s() == nil)
@@ -459,6 +455,10 @@ s = S.fr_table { 1, 3, 1, 1, 2, 3 }
 s = S.distinct(s)
 values = S.table(s):to()
 assert(#values==3 and values[1]==1 and values[2]==3 and values[3]==2)
+
+    s = S.fr_range(1, 5)
+    local mul = S.mul(s):to()
+    assert(mul == 120)
 
 print "--- LOOP ---"
 do

@@ -262,7 +262,27 @@ function M.seq (s1, s2)
     local t = {
         cur = s1,
         nxt = s2,
-        f = seq
+        f = seq,
+    }
+    return setmetatable(t, M.mt)
+end
+
+-------------------------------------------------------------------------------
+
+local function take (t)
+    if t.i >= t.n then
+        return nil
+    end
+    t.i = t.i + 1
+    return t.s()
+end
+
+function M.take (s, n)
+    local t = {
+        s = s,
+        i = 0,
+        n = n,
+        f = take,
     }
     return setmetatable(t, M.mt)
 end
@@ -370,19 +390,20 @@ function M.mapi (s, f)
     end)
 end
 
-function M.table (s)
-    return M.acc0(s, {}, function(a,v) a[#a+1]=v ; return a end)
+function M.max (s)
+    return M.acc0(s, -math.huge, function(a,x) return math.max(a,x) end)
 end
 
-function M.take (s, n)
-    local i = 0
-    return M.acc1(s, function (_, v)
-        i = i + 1
-        if i > n then
-            return nil
-        end
-        return v
-    end)
+function M.min (s)
+    return M.acc0(s, math.huge, function(a,x) return math.min(a,x) end)
+end
+
+function M.sum (s)
+    return M.acc0(s, 0, function(a,x) return a+x end)
+end
+
+function M.table (s)
+    return M.acc0(s, {}, function(a,v) a[#a+1]=v ; return a end)
 end
 
 function M.tap (s, f)
@@ -390,23 +411,6 @@ function M.tap (s, f)
         f(v)
         return v
     end)
-end
-
--------------------------------------------------------------------------------
-
-do
-    function M.max (s)
-        return M.acc0(s, -math.huge, function(a,x) return math.max(a,x) end)
-    end
-    function M.min (s)
-        return M.acc0(s, math.huge, function(a,x) return math.min(a,x) end)
-    end
-    function M.mul (s)
-        return M.acc0(s, 1, function(a,x) return a*x end)
-    end
-    function M.sum (s)
-        return M.acc0(s, 0, function(a,x) return a+x end)
-    end
 end
 
 -------------------------------------------------------------------------------
@@ -570,6 +574,10 @@ function M.tuple (s, tag)
 end
 
 -------------------------------------------------------------------------------
+
+    function M.mul (s)
+        return M.acc0(s, 1, function(a,x) return a*x end)
+    end
 
 function M.sort (s, f)
     return s:map(function (t)
