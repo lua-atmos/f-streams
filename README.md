@@ -1,6 +1,6 @@
 # f-streams
 
-***Pull Streams for Lua***
+***Pull-based Streams for Lua***
 
 [
     [`v0.2`](https://github.com/lua-atmos/f-streams/tree/v0.2) |
@@ -10,6 +10,8 @@
 This is the unstable `main` branch.
 Please, switch to stable [`v0.2`](https://github.com/lua-atmos/f-streams/tree/v0.2).
 
+# About
+
 `f-streams` is a pull-based streams library for Lua:
 
 - A stream produces a new value each time is called.
@@ -18,18 +20,7 @@ Please, switch to stable [`v0.2`](https://github.com/lua-atmos/f-streams/tree/v0
 - A stream can be iterated over using Lua's generic [for][lua-for] loop.
 - A stream can represent infinite lazy lists.
 
-A simple example that produces the values `1`, `2`, and `3`:
-
-```
-local S = require "streams"
-local s = S.from(1,3)
-print(s())  -- 1
-print(s())  -- 2
-print(s())  -- 3
-print(s())  -- nil
-```
-
-An example that prints the first three odd numbers multiplied by `2`:
+The next example prints the first three odd numbers multiplied by `2`:
 
 ```
 S.from(1)                                       -- 1, 2, 3, ...
@@ -39,6 +30,8 @@ S.from(1)                                       -- 1, 2, 3, ...
     :tap(print)                                 -- 2 / 6 / 10
     :to()
 ```
+
+# API
 
 The API is divided into three groups: *sources*, *combinators* and *sinks*.
 
@@ -139,6 +132,17 @@ cp streams/init.lua /usr/local/share/lua/5.4/streams.lua
 ```
 
 # Examples
+
+Produces the values `1`, `2`, and `3`:
+
+```
+local S = require "streams"
+local s = S.from(1,3)
+print(s())  -- 1
+print(s())  -- 2
+print(s())  -- 3
+print(s())  -- nil
+```
 
 Counts from `1` to infinity, takes the first 3 values, converts to table, and
 print all indexes and values:
