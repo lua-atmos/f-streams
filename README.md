@@ -1,15 +1,14 @@
 # f-streams
 
-This is the unstable `main` branch.
-
-For a stable release, please switch to [`v0.2`][v0.2].
+***Pull Streams for Lua**
 
 [
-    [`v0.2`][v0.2] |
+    [`v0.2`](https://github.com/lua-atmos/f-streams/tree/v0.2) |
     [`v0.1`](https://github.com/lua-atmos/f-streams/tree/v0.1)
 ]
 
-[v0.2]: https://github.com/lua-atmos/f-streams/tree/v0.2
+This is the unstable `main` branch.
+Please, switch to stable [`v0.2`](https://github.com/lua-atmos/f-streams/tree/v0.2).
 
 `f-streams` is a pull-based streams library for Lua:
 
