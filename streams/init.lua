@@ -2,12 +2,16 @@ local M = {}
 
 M.mt = {
     __call  = function (t) return t:f() end,
-    __close = function (t) if t.close then t:close() end end,
+    __close = function (t) if t.clo then t:clo() end end,
     __index = M,
 }
 
 function M.is (s)
     return (getmetatable(s) == M.mt)
+end
+
+local function close_s (t)
+    local _ <close> = t.s
 end
 
 -------------------------------------------------------------------------------
@@ -61,10 +65,15 @@ local function fr_coroutine (t)
     end)(coroutine.resume(t.co))
 end
 
+local function close (t)
+    coroutine.close(t.co)
+end
+
 function M.fr_coroutine (co)
     local t = {
-        co = co,
-        f  = fr_coroutine,
+        co  = co,
+        f   = fr_coroutine,
+        clo = close,
     }
     return setmetatable(t, M.mt)
 end
@@ -174,6 +183,7 @@ function M.acc0 (s, z, g)
         cur  = z,
         done = false,
         f    = acc0,
+        clo  = close_s,
     }
     return setmetatable(t, M.mt)
 end
@@ -195,6 +205,7 @@ function M.acc1 (s, g)
         g   = g,
         cur = nil,
         f   = acc1,
+        clo = close_s,
     }
     return setmetatable(t, M.mt)
 end
@@ -215,9 +226,10 @@ end
 
 function M.filter (s, g)
     local t = {
-        s = s,
-        g = g,
-        f = filter,
+        s   = s,
+        g   = g,
+        f   = filter,
+        clo = close_s,
     }
     return setmetatable(t, M.mt)
 end
@@ -236,9 +248,10 @@ end
 
 function M.skip (s, n)
     local t = {
-        s = s,
-        n = n or 1,
-        f = skip
+        s   = s,
+        n   = n or 1,
+        f   = skip,
+        clo = close_s,
     }
     return setmetatable(t, M.mt)
 end
@@ -258,11 +271,17 @@ local function seq (t)
     return v
 end
 
+local function close (t)
+    local _ <close> = t.cur
+    local _ <close> = t.nxt
+end
+
 function M.seq (s1, s2)
     local t = {
         cur = s1,
         nxt = s2,
-        f = seq,
+        f   = seq,
+        clo = close,
     }
     return setmetatable(t, M.mt)
 end
@@ -279,10 +298,11 @@ end
 
 function M.take (s, n)
     local t = {
-        s = s,
-        i = 0,
-        n = n,
-        f = take,
+        s   = s,
+        i   = 0,
+        n   = n,
+        f   = take,
+        clo = close_s,
     }
     return setmetatable(t, M.mt)
 end
@@ -306,16 +326,18 @@ end
 function M.tee2 (s)
     local q1, q2 = {}, {}
     local t1 = {
-        s  = s,
-        q1 = q1,
-        q2 = q2,
-        f  = tee2,
+        s   = s,
+        q1  = q1,
+        q2  = q2,
+        f   = tee2,
+        clo = close_s,
     }
     local t2 = {
-        s  = s,
-        q1 = q2,
-        q2 = q1,
-        f  = tee2,
+        s   = s,
+        q1  = q2,
+        q2  = q1,
+        f   = tee2,
+        clo = close_s,
     }
     t1 = setmetatable(t1, M.mt)
     t2 = setmetatable(t2, M.mt)
@@ -368,10 +390,17 @@ local function zip (t)
     return vs
 end
 
+local function close (t)
+    for _, s in ipairs(t.ss) do
+        local _ <close> = s
+    end
+end
+
 function M.zip (...)
     local t = {
-        ss = {...},
-        f  = zip,
+        ss  = {...},
+        f   = zip,
+        clo = close,
     }
     return setmetatable(t, M.mt)
 end
@@ -436,23 +465,12 @@ end
 
 function M.xseq (ss)
     local t = {
-        ss = ss,
-        s = false,
-        f = xseq,
+        ss  = ss,
+        s   = false,
+        f   = xseq,
+        clo = close_s,
     }
     return setmetatable(t, M.mt)
-end
-
--------------------------------------------------------------------------------
-
-function M.skip (s, n)
-    return s:mapi(function(i, v)
-        if i > n then
-            return M.fr_consts(v):take(1)
-        else
-            return M.empty()
-        end
-    end):xseq()
 end
 
 -------------------------------------------------------------------------------
@@ -529,8 +547,6 @@ function M.distinct (s)
     return setmetatable(t, M.mt)
 end
 
--------------------------------------------------------------------------------
-
 local function loop (t)
     local v = t.s()
     if v == nil then
@@ -549,11 +565,9 @@ function M.loop (fs)
     return setmetatable(t, M.mt)
 end
 
--------------------------------------------------------------------------------
-
-    function M.to_vector (s)
-        return M.to_table(s)
-    end
+function M.to_vector (s)
+    return M.to_table(s)
+end
 
 local function tuple (t)
     return (function (...)
@@ -573,11 +587,9 @@ function M.tuple (s, tag)
     return setmetatable(t, M.mt)
 end
 
--------------------------------------------------------------------------------
-
-    function M.mul (s)
-        return M.acc0(s, 1, function(a,x) return a*x end)
-    end
+function M.mul (s)
+    return M.acc0(s, 1, function(a,x) return a*x end)
+end
 
 function M.sort (s, f)
     return s:map(function (t)
@@ -586,6 +598,15 @@ function M.sort (s, f)
     end)
 end
 
+function M.skip (s, n)
+    return s:mapi(function(i, v)
+        if i > n then
+            return M.fr_consts(v):take(1)
+        else
+            return M.empty()
+        end
+    end):xseq()
+end
 ]===]
 
 return M
