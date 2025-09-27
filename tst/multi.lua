@@ -2,7 +2,7 @@ local S = require("streams")
 
 print "- MAP / FILTER -"
 do
-    local s = S.fr_consts(42)
+    local s = S.fr_const(42)
     local mapped = S.map(s, function(x) return x * 2 end)
     assert(mapped() == 84)
     assert(mapped() == 84)
@@ -83,7 +83,7 @@ do
     assert(result[2][1]==2 and result[2][2]==7)
     assert(result[3][1]==3 and result[3][2]==8)
 
-    local s1 = S.fr_consts(nil)
+    local s1 = S.fr_const(nil)
     local s2 = S.from(6, 10)
     local zipped = S.zip(s1, s2)
     local result = {}

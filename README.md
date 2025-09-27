@@ -57,7 +57,7 @@ terminates.
 [lua-for]: https://www.lua.org/manual/5.4/manual.html#3.3.5
 
 - Sources
-    - `fr_consts(v)`:       stream of constants `v`
+    - `fr_const(v)`:       stream of constants `v`
     - `fr_coroutine(co)`:   stream of values from coroutine `co`
     - `fr_counter(a)`:      stream of numbers from `a` to infinity
     - `fr_function(f)`:     stream of `f()` results
