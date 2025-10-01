@@ -134,10 +134,11 @@ terminates.
 
 As a fundamental limitation, `f-streams` does not support a [merge][rx-merge]
 combinator to read from multiple streams concurrently.
-However, this limitation is addressed by [`lua-atmos`](lua-atmos), which
+However, this limitation is addressed by [`lua-atmos`][lua-atmos], which
 extends `f-streams` with equivalent combinators.
 
-[rx-merge]: https://rxmarbles.com/#merge
+[rx-merge]:  https://rxmarbles.com/#merge
+[lua-atmos]: https://github.com/lua-atmos/atmos
 
 # Examples
 
