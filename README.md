@@ -10,6 +10,13 @@
 This is the unstable `main` branch.
 Please, switch to stable [`v0.2`](https://github.com/lua-atmos/f-streams/tree/v0.2).
 
+[
+    [About](#about)                 |
+    [Install & Run](#install--run)  |
+    [API](#api)                     |
+    [Examples](#examples)
+]
+
 # About
 
 `f-streams` is a pull-based streams library for Lua:
