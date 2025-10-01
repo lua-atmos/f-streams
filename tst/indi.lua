@@ -4,7 +4,7 @@ print "--- SOURCES ---"
 
 do
     print("Testing...", "consts 1")
-    local s = S.fr_consts(42)
+    local s = S.fr_const(42)
     assert(s() == 42)
     assert(s() == 42)
     assert(s() == 42)

@@ -35,20 +35,20 @@ function M.from (v, ...)
     elseif type(v) == 'coroutine' then
         return M.fr_coroutine(v)
     else
-        return M.fr_consts(v)
+        return M.fr_const(v)
     end
 end
 
 -------------------------------------------------------------------------------
 
-local function fr_consts (t)
+local function fr_const (t)
     return t.v
 end
 
-function M.fr_consts (v)
+function M.fr_const (v)
     local t = {
         v = v,
-        f = fr_consts,
+        f = fr_const,
     }
     return setmetatable(t, M.mt)
 end

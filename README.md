@@ -25,6 +25,7 @@ Please, switch to stable [`v0.2`](https://github.com/lua-atmos/f-streams/tree/v0
 The following example prints the first three odd numbers multiplied by `2`:
 
 ```
+local S = require "streams"
 S.from(1)                                       -- 1, 2, 3, ...
     :filter(function (x) return x%2 == 1 end)   -- 1, 3, 5, ...
     :map(function (x) return x * 2 end)         -- 2, 6, 10, ...
@@ -59,7 +60,7 @@ terminates.
 [lua-for]: https://www.lua.org/manual/5.4/manual.html#3.3.5
 
 - Sources
-    - `fr_consts(v)`:       stream of constants `v`
+    - `fr_const(v)`:       stream of constants `v`
     - `fr_coroutine(co)`:   stream of values from coroutine `co`
     - `fr_counter(a)`:      stream of numbers from `a` to infinity
     - `fr_function(f)`:     stream of `f()` results
