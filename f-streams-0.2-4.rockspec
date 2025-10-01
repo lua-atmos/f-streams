@@ -1,5 +1,5 @@
 package = "f-streams"
-version = "0.2-3"
+version = "0.2-4"
 source = {
    url = "git+https://github.com/lua-atmos/f-streams",
    branch = "v0.2",
