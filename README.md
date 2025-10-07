@@ -12,6 +12,13 @@ This is the unstable `main` branch.
 Please, switch to stable [`v0.2`](https://github.com/lua-atmos/f-streams/tree/v0.2).
 -->
 
+[
+    [About](#about)                 |
+    [Install & Run](#install--run)  |
+    [API](#api)                     |
+    [Examples](#examples)
+]
+
 # About
 
 `f-streams` is a pull-based streams library for Lua:
@@ -60,7 +67,7 @@ terminates.
 [lua-for]: https://www.lua.org/manual/5.4/manual.html#3.3.5
 
 - Sources
-    - `fr_const(v)`:       stream of constants `v`
+    - `fr_const(v)`:        stream of constants `v`
     - `fr_coroutine(co)`:   stream of values from coroutine `co`
     - `fr_counter(a)`:      stream of numbers from `a` to infinity
     - `fr_function(f)`:     stream of `f()` results
@@ -129,10 +136,11 @@ terminates.
 
 As a fundamental limitation, `f-streams` does not support a [merge][rx-merge]
 combinator to read from multiple streams concurrently.
-However, this limitation is addressed by [`lua-atmos`](lua-atmos), which
+However, this limitation is addressed by [`lua-atmos`][lua-atmos], which
 extends `f-streams` with equivalent combinators.
 
-[rx-merge]: https://rxmarbles.com/#merge
+[rx-merge]:  https://rxmarbles.com/#merge
+[lua-atmos]: https://github.com/lua-atmos/atmos
 
 # Examples
 

@@ -413,9 +413,9 @@ end
 
 function M.mapi (s, f)
     local i = 0
-    return s:map(function (x)
+    return s:map(function (v)
         i = i + 1
-        return f(i, x)
+        return f(i, v)
     end)
 end
 
