@@ -19,4 +19,4 @@ jobs:
         sudo apt-get install -y lua5.4
 
     - name: Run tests
-      run: make test
+      run: cd tst && lua5.4 all.lua
