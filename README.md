@@ -1,11 +1,16 @@
 # f-streams
 
+[![Tests][badge]][test]
+
 ***Pull-based Streams for Lua***
 
 [
     [`v0.2`](https://github.com/lua-atmos/f-streams/tree/v0.2) |
     [`v0.1`](https://github.com/lua-atmos/f-streams/tree/v0.1)
 ]
+
+[badge]: https://github.com/lua-atmos/f-streams/actions/workflows/test.yml/badge.svg
+[test]:  https://github.com/lua-atmos/f-streams/actions/workflows/test.yml
 
 This is the unstable `main` branch.
 Please, switch to stable [`v0.2`](https://github.com/lua-atmos/f-streams/tree/v0.2).
