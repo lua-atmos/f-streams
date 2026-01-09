@@ -1,3 +1,3 @@
 ```bash
-lua5.4 all.lua
+LUA_PATH="../?/init.lua;;" lua5.4 all.lua
 ```
