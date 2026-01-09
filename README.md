@@ -1,5 +1,7 @@
 # f-streams
 
+[![Tests](https://github.com/lua-atmos/f-streams/actions/workflows/test.yml/badge.svg)](https://github.com/lua-atmos/f-streams/actions/workflows/test.yml)
+
 ***Pull-based Streams for Lua***
 
 [
